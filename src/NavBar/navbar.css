@@ -1,0 +1,16 @@
+.my-button {
+    margin-top: 0.1rem;
+    margin-bottom: 0.1rem;
+    padding-left: 0.9rem;
+    padding-right: 0.9rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    transition: all 0.2s;
+}
+
+.my-button:hover {
+    background-color: rgb(255, 218, 169);
+}
