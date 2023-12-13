@@ -1,22 +1,20 @@
-import NavBar from './NavBar/navbar.jsx';
-// import HomePage from './homepage/homepage.jsx';
-import Blocks from './Blocks';
+import { BrowserRouter as Main, Route, Routes } from 'react-router-dom';
+import NavBar from './Components/Navbar.jsx';
+import Payment from './Components/Payment.jsx';
+import Profile from './Components/Profile.jsx';
+import Homepage from './Components/Homepage.jsx';
 
 function App() {
   return (
     <>
-      <NavBar />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
-      <Blocks />
+      <Main>
+        <NavBar />
+        <Routes>
+          <Route exact path="/home" element={<Homepage />} />
+          <Route exact path="/profile" element={<Profile />} />
+          <Route exact path="/payment" element={<Payment />} />
+        </Routes>
+      </Main>
     </>
   );
 }

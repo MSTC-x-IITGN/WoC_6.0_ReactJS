@@ -1,5 +1,5 @@
 import React from 'react';
-import './navbar.css';
+import '../CSS/Navbar.css';
 
 function NavBar() {
     const navbarStyle = {
@@ -13,7 +13,7 @@ function NavBar() {
     return (
         <nav className="my-2 mx-2 navbar navbar-expand-lg border p-2" style={navbarStyle}>
             <div className="container-fluid">
-                <a className="navbar-brand" href="#home">
+                <a className="navbar-brand" href="/home">
                     Navbar
                 </a>
                 <button
@@ -31,15 +31,15 @@ function NavBar() {
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <div className="my-button">
-                                <a className="nav-link active" href="#home">
+                                <a className="nav-link active" href="/home">
                                     Home
                                 </a>
                             </div>
                         </li>
                         <li className="nav-item">
                             <div className="my-button">
-                                <a className="nav-link" href="#link">
-                                    Link
+                                <a className="nav-link" href="/payment">
+                                    Payment
                                 </a>
                             </div>
                         </li>
@@ -79,7 +79,7 @@ function NavBar() {
 
                         <li className="nav-item">
                             <div className="my-button">
-                                <a className="nav-link" href="#link">
+                                <a className="nav-link" href="/profile">
                                     Profile
                                 </a>
                             </div>
