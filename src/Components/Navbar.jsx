@@ -31,7 +31,7 @@ function NavBar() {
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <div className="my-button">
-                                <a className="nav-link active" href="/home">
+                                <a className="nav-link active" href="/">
                                     Home
                                 </a>
                             </div>

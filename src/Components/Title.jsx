@@ -2,7 +2,6 @@ import React from 'react';
 
 function Title() {
     const imageURL = "https://images.unsplash.com/photo-1474487548417-781cb71495f3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dHJhaW58ZW58MHx8MHx8fDA%3D";
-
     return (
         <div className="container">
             <div className="row justify-content-center align-items-center mt-5">
@@ -17,7 +16,7 @@ function Title() {
                 </div>
                 <div className="col-md-6">
                     <div className="card" style={{ maxWidth: "100%" }}>
-                        <img src={imageURL} className="card-img-top" alt="train-image" />
+                        <img src={imageURL} className="card-img-top" alt="" />
                     </div>
                 </div>
             </div>
