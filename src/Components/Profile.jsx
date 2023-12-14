@@ -18,7 +18,7 @@ function Profile() {
 
     const [phoneNumber, setPhoneNumber] = useState('');
     const [isValid, setIsValid] = useState(false);
-    const [username, setUsernmae] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [name2, setName2] = useState('');
     const [name3, setName3] = useState('');
@@ -50,9 +50,6 @@ function Profile() {
         setIsValid4(isValidName);
     };
 
-    const handleDateChange5 = (event) => {
-    };
-
     const handleGenderChange6 = (event) => {
     };
 
@@ -63,7 +60,7 @@ function Profile() {
 
     const handleNameChange8 = (event) => {
         const inputName = event.target.value;
-        setUsernmae(inputName);
+        setUsername(inputName);
     };
 
     const validatePhoneNumber = (input) => {
@@ -96,7 +93,7 @@ function Profile() {
                                     {email || 'YOUR EMAIL ID'}
                                 </h6>
                                 <h6 className="card-subtitle mb-2 text-muted dark">
-                                    {(isValid && phoneNumber.length == 10) ? phoneNumber : 'YOUR MOBILE No.'}
+                                    {(isValid && phoneNumber.length === 10) ? phoneNumber : 'YOUR MOBILE No.'}
                                 </h6>
                             </div>
                         </div>
@@ -189,19 +186,19 @@ function Profile() {
                                             <input type="text" className="form-control" placeholder="9900990099" aria-label="9900990099" aria-describedby="basic-addon1" onChange={handleInputChange} />
                                         </div>
                                         <div className="mx-3">
-                                            {(!isValid || phoneNumber.length != 10) ? <p style={{ color: 'red' }}>Please enter a 10-digit number.</p> : (<p style={{ color: 'green' }}>Valid</p>)}
+                                            {(!isValid || phoneNumber.length !== 10) ? <p style={{ color: 'red' }}>Please enter a 10-digit number.</p> : (<p style={{ color: 'green' }}>Valid</p>)}
                                         </div>
                                     </div>
                                 </div>
                                 <div className="row g-2">
                                     <div className="col-md-6">
-                                        <label for="inputCity" className="form-label">City</label>
+                                        <label htmlFor="inputCity" className="form-label">City</label>
                                         <input type="text" className="form-control" id="inputCity" />
                                     </div>
                                     <div className="col-md-4">
-                                        <label for="inputState" className="form-label">State</label>
+                                        <label htmlFor="inputState" className="form-label">State</label>
                                         <select id="inputState" className="form-select">
-                                            <option selected>Gujarat</option>
+                                            <option defaultValue>Gujarat</option>
                                             <option>Maharastra</option>
                                             <option>Rajsthan</option>
                                             <option>Uttar paradesh</option>
