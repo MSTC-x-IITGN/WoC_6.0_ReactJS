@@ -145,7 +145,13 @@ function FromTo() {
                         <div className="list-group">
                             {ToText !== '' && suggestionsTo.map((suggestion, index) => (
                                 <button key={index} type="button" className="list-group-item list-group-item-action"
-                                    onClick={() => selectThisToCity(suggestion)}>{suggestion.station} | {suggestion.code}</button>
+                                    onClick={() => selectThisToCity(suggestion)}>
+                                    <div>
+                                        {suggestion.station} - {suggestion.code}
+                                    </div>
+                                    <div className='fw-semibold'>
+                                        {suggestion.state}
+                                    </div></button>
                             ))}
                         </div>
                     </div>
