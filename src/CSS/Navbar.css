@@ -11,6 +11,10 @@
     transition: all 0.2s;
 }
 
+.user-data {
+    background-color: rgb(255, 202, 133);
+}
+
 .my-button:hover {
     background-color: rgb(255, 218, 169);
 }

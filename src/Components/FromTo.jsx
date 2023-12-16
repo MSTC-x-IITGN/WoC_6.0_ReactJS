@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import words from './Stations.jsx'
 
 class TrieNode {
     constructor() {
@@ -61,37 +62,6 @@ function FromTo() {
     const [suggestionsTo, setSuggestionsTo] = useState([]);
 
     const trie = new Trie();
-    const words = [
-        { "code": "ADI", "station": "Ahmedabad Junction" },
-        { "code": "ANND", "station": "Anand Junction" },
-        { "code": "BH", "station": "Bhavnagar Terminus" },
-        { "code": "BVC", "station": "Bhavnagar Terminus" },
-        { "code": "BHUJ", "station": "Bhuj" },
-        { "code": "BTD", "station": "Botad Junction" },
-        { "code": "DHD", "station": "Dahod" },
-        { "code": "DWK", "station": "Dwarka" },
-        { "code": "GIMB", "station": "Gandhidham BG" },
-        { "code": "GNC", "station": "Gandhinagar Capital" },
-        { "code": "GDA", "station": "Godhra Junction" },
-        { "code": "HMT", "station": "Himmatnagar" },
-        { "code": "JAM", "station": "Jamnagar" },
-        { "code": "JND", "station": "Junagadh Junction" },
-        { "code": "MSH", "station": "Mehsana Junction" },
-        { "code": "MVI", "station": "Morbi" },
-        { "code": "ND", "station": "Nadiad Junction" },
-        { "code": "NVS", "station": "Navsari" },
-        { "code": "PNU", "station": "Palanpur Junction" },
-        { "code": "PBR", "station": "Porbandar" },
-        { "code": "RJT", "station": "Rajkot Junction" },
-        { "code": "SMNH", "station": "Somnath" },
-        { "code": "ST", "station": "Surat" },
-        { "code": "SUNR", "station": "Surendranagar" },
-        { "code": "BRC", "station": "Valsad" },
-        { "code": "BL", "station": "Valsad" },
-        { "code": "VAPI", "station": "Vapi" },
-        { "code": "VRL", "station": "Veraval" },
-        { "code": "VYA", "station": "Vyara" }
-    ];
 
     words.forEach((word) => trie.insert(word));
 
@@ -147,7 +117,14 @@ function FromTo() {
                         <div className="list-group">
                             {FromText !== '' && suggestionsFrom.map((suggestion, index) => (
                                 <button key={index} type="button" className="list-group-item list-group-item-action"
-                                    onClick={() => selectThisFromCity(suggestion)}>{suggestion.station} - {suggestion.code}</button>
+                                    onClick={() => selectThisFromCity(suggestion)}>
+                                    <div>
+                                        {suggestion.station} - {suggestion.code}
+                                    </div>
+                                    <div className='fw-semibold'>
+                                        {suggestion.state}
+                                    </div>
+                                </button>
                             ))}
                         </div>
                     </div>

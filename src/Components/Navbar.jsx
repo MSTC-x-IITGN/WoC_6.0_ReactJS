@@ -1,7 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../CSS/Navbar.css';
 
+
+//new
+import { useFirebase } from '../Context/Firebase';
+
+
 function NavBar() {
+    const firebase = useFirebase();
+
     const navbarStyle = {
         position: 'sticky',
         top: '1%',
@@ -13,9 +21,9 @@ function NavBar() {
     return (
         <nav className="my-2 mx-2 navbar navbar-expand-lg border p-2" style={navbarStyle}>
             <div className="container-fluid">
-                <a className="navbar-brand" href="/home">
+                <Link className="navbar-brand" to="/home">
                     Navbar
-                </a>
+                </Link>
                 <button
                     className="navbar-toggler"
                     type="button"
@@ -31,74 +39,69 @@ function NavBar() {
                     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <div className="my-button">
-                                <a className="nav-link active" href="/">
+                                <Link className="nav-link active" to="/">
                                     Home
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         <li className="nav-item">
                             <div className="my-button">
-                                <a className="nav-link" href="/payment">
+                                <Link className="nav-link" to="/payment">
                                     Payment
-                                </a>
+                                </Link>
                             </div>
                         </li>
                         <div className="my-button">
                             <li className="nav-item dropdown">
-                                <a
+                                <Link
                                     className="nav-link dropdown-toggle"
-                                    href="#home"
+                                    to="#home"
                                     role="button"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false"
                                 >
                                     Dropdown
-                                </a>
+                                </Link>
                                 <ul className="dropdown-menu">
                                     <li>
-                                        <a className="dropdown-item" href="#action">
+                                        <Link className="dropdown-item" to="#action">
                                             Action
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="#another-action">
+                                        <Link className="dropdown-item" to="#another-action">
                                             Another action
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
                                         <hr className="dropdown-divider" />
                                     </li>
                                     <li>
-                                        <a className="dropdown-item" href="#something-else">
+                                        <Link className="dropdown-item" to="#something-else">
                                             Something else here
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
                             </li>
                         </div>
-
                         <li className="nav-item">
-                            <div className="my-button">
-                                <a className="nav-link" href="/profile">
-                                    Profile
-                                </a>
+                            <div className="my-button user-data">
+                                {firebase.isLoggedIn ?
+                                    <Link className="nav-link" to="/profile">
+                                        Profile
+                                    </Link>
+                                    :
+                                    <Link className="nav-link" to="/login">
+                                        LogIn/SignUP
+                                    </Link>
+                                }
                             </div>
                         </li>
+
                     </ul>
-                    {/* <form className="d-flex" role="search">
-                  <input
-                      className="form-control me-2"
-                      type="search"
-                      placeholder="Search"
-                      aria-label="Search"
-                  />
-                  <button className="btn btn-outline-success" type="submit">
-                      Search
-                  </button>
-              </form> */}
                 </div>
             </div>
-        </nav >
+        </nav>
     );
 }
 
