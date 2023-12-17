@@ -7,13 +7,16 @@ import reportWebVitals from './reportWebVitals';
 //imported
 import { FirebaseProvider } from './Context/Firebase.jsx'
 import { BrowserRouter } from "react-router-dom";
+import { SearchTrainProvider } from './Context/SearchTrain';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
       <FirebaseProvider>
-        <App />
+        <SearchTrainProvider>
+          <App />
+        </SearchTrainProvider>
       </FirebaseProvider>
     </BrowserRouter>
   </React.StrictMode>

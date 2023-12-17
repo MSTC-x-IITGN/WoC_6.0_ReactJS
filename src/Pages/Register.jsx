@@ -7,7 +7,11 @@ import { useFirebase } from '../Context/Firebase';
 import Alert from 'react-bootstrap/Alert';
 import { Link } from 'react-router-dom';
 
+
 const RegisterPage = () => {
+
+    const [Emailcheck, setEmailcheck] = useState(false);
+    const [passwordcheck, setpasswordcheck] = useState(false);
 
     const firebase = useFirebase();
     const [email, setEmail] = useState('');
@@ -16,13 +20,15 @@ const RegisterPage = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        setEmailcheck(true);
+        setpasswordcheck(true);
         e.preventDefault();
         if (password && email && validPassword) {
 
-            // console.log('logged in...');
+            console.log('logged in...');
             const result = await firebase.signupWithEmailAndPassword(email, password);
             firebase.setIsLoggedIn(true);
-            // console.log('success', result);
+            console.log('success', result);
         }
     }
     useEffect(() => {
@@ -45,6 +51,7 @@ const RegisterPage = () => {
 
     const handlePasswordofLogin = (e) => {
         const input = e.target.value;
+        setpasswordcheck(true);
         setPassword(input);
         if (input.length < 8) { setValidPassword(false); return; }
         else {
@@ -59,12 +66,12 @@ const RegisterPage = () => {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control
-                        onChange={(e) => { setEmail(e.target.value) }}
+                        onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
                         value={email}
                         type="email"
                         placeholder="Enter email" />
                 </Form.Group>
-                {!email &&
+                {!email && Emailcheck &&
                     <Alert variant='danger'>
                         This field cannot be empty.
                     </Alert>
@@ -78,7 +85,7 @@ const RegisterPage = () => {
                         type="password"
                         placeholder="Password" />
                 </Form.Group>
-                {!password &&
+                {!password && passwordcheck &&
                     <Alert variant='danger'>
                         This field cannot be empty.
                     </Alert>
@@ -89,11 +96,11 @@ const RegisterPage = () => {
                     </Alert>
                 }
                 <Button variant="primary" type="submit">
-                    Create Account
+                    Login
                 </Button>
                 <Button>
-                    <Link className="nav-link" to="/login">
-                        Login
+                    <Link className="nav-link" to="/register">
+                        Register
                     </Link>
                 </Button>
             </Form>

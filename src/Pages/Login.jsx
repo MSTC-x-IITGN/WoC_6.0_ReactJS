@@ -10,6 +10,9 @@ import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
 
+    const [Emailcheck, setEmailcheck] = useState(false);
+    const [passwordcheck, setpasswordcheck] = useState(false);
+
     const firebase = useFirebase();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,6 +20,8 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
+        setEmailcheck(true);
+        setpasswordcheck(true);
         e.preventDefault();
         if (password && email && validPassword) {
 
@@ -30,7 +35,6 @@ const LoginPage = () => {
         if (firebase.isLoggedIn) {
             navigate("/");
         }
-
     }, [firebase, navigate]);
 
     const handleGoogleSignIn = async () => {
@@ -47,6 +51,7 @@ const LoginPage = () => {
 
     const handlePasswordofLogin = (e) => {
         const input = e.target.value;
+        setpasswordcheck(true);
         setPassword(input);
         if (input.length < 8) { setValidPassword(false); return; }
         else {
@@ -61,12 +66,12 @@ const LoginPage = () => {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Email address</Form.Label>
                     <Form.Control
-                        onChange={(e) => { setEmail(e.target.value) }}
+                        onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
                         value={email}
                         type="email"
                         placeholder="Enter email" />
                 </Form.Group>
-                {!email &&
+                {!email && Emailcheck &&
                     <Alert variant='danger'>
                         This field cannot be empty.
                     </Alert>
@@ -80,7 +85,7 @@ const LoginPage = () => {
                         type="password"
                         placeholder="Password" />
                 </Form.Group>
-                {!password &&
+                {!password && passwordcheck &&
                     <Alert variant='danger'>
                         This field cannot be empty.
                     </Alert>

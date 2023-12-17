@@ -1105,6 +1105,11 @@ const Stations = [
         "state": "Assam"
     },
     {
+        "station": "GANDHINAGAR",
+        "code": "GNC",
+        "state": "Gujarat"
+    },
+    {
         "station": "GUDIVADA",
         "code": "GDV",
         "state": "Andhra Pradesh"

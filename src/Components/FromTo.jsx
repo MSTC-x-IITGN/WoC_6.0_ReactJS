@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import words from './Stations.jsx'
+import words from './Stations.jsx';
+import Button from 'react-bootstrap/Button';
+import { useEffect } from 'react';
+import { useSearchTrain } from '../Context/SearchTrain.jsx';
+
 
 class TrieNode {
     constructor() {
@@ -56,10 +60,17 @@ class Trie {
 }
 
 function FromTo() {
+
+    const SerachTrain = useSearchTrain();
+
+
     const [FromText, setFromText] = useState('');
     const [ToText, setToText] = useState('');
     const [suggestionsFrom, setSuggestionsFrom] = useState([]);
     const [suggestionsTo, setSuggestionsTo] = useState([]);
+    const [fromOk, setFromOk] = useState(false);
+    const [toOk, setToOk] = useState(false);
+    const [isEnable, setIsEnable] = useState(false);
 
     const trie = new Trie();
 
@@ -70,6 +81,7 @@ function FromTo() {
         setFromText(input);
         const filteredSuggestions = trie.search(input);
         setSuggestionsFrom(filteredSuggestions);
+        setFromOk(false);
     }
 
     const changingToText = (e) => {
@@ -77,16 +89,19 @@ function FromTo() {
         setToText(input);
         const filteredSuggestions = trie.search(input);
         setSuggestionsTo(filteredSuggestions);
+        setToOk(false);
     }
 
     const selectThisFromCity = (selectedCity) => {
         setFromText(selectedCity.station);
         setSuggestionsFrom([]);
+        setFromOk(true);
     }
 
     const selectThisToCity = (selectedCity) => {
         setToText(selectedCity.station);
         setSuggestionsTo([]);
+        setToOk(true);
     }
 
     const swapText = () => {
@@ -96,6 +111,23 @@ function FromTo() {
         setToText(temp1);
         setFromText(temp2);
     }
+
+    useEffect(() => {
+        if (fromOk && toOk) {
+            setIsEnable(true);
+        }
+        else {
+            setIsEnable(false);
+        }
+    }, [FromText, ToText]);
+
+    useEffect(() => {
+        if (isEnable) {
+            SerachTrain.setFromTextContext(FromText);
+            SerachTrain.setToTextContext(ToText);
+            SerachTrain.setIsFormTo(isEnable);
+        }
+    }, [FromText, ToText, isEnable]);
 
     return (
         <div className="container d-flex justify-content-center align-items-center my-5">

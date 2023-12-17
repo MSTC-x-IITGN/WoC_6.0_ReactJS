@@ -51,6 +51,13 @@ function NavBar() {
                                 </Link>
                             </div>
                         </li>
+                        <li className="nav-item">
+                            <div className="my-button">
+                                <Link className="nav-link" to="/booklist">
+                                    Booklist
+                                </Link>
+                            </div>
+                        </li>
                         <div className="my-button">
                             <li className="nav-item dropdown">
                                 <Link
