@@ -4,7 +4,7 @@ import { useSearchTrain } from "../Context/SearchTrain";
 import { Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import TrainBox from './TrainBox';
+import TrainBox from './TrainBox'
 
 export default function Searching() {
 
@@ -48,7 +48,6 @@ export default function Searching() {
                     ))}
                 </>
             }
-
         </>
     );
 }

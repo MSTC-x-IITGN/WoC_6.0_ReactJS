@@ -7,87 +7,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-const rows = [
-    {
-        SN: 1,
-        StationCode: "MMCT",
-        StationName: "MUMBAI CENTRAL",
-        RouteNumber: "1",
-        ArrivalTime: "---",
-        DepartureTime: "06:00",
-        HaltTime: "---",
-        Distance: "0",
-        Day: "1"
-    },
-    {
-        SN: 2,
-        StationCode: "BVI",
-        StationName: "BORIVALI",
-        RouteNumber: "1",
-        ArrivalTime: "06:23",
-        DepartureTime: "06:25",
-        HaltTime: "02:00",
-        Distance: "30",
-        Day: "1"
-    },
-    {
-        SN: 3,
-        StationCode: "VAPI",
-        StationName: "VAPI",
-        RouteNumber: "1",
-        ArrivalTime: "07:56",
-        DepartureTime: "07:58",
-        HaltTime: "02:00",
-        Distance: "170",
-        Day: "1"
-    },
-    {
-        SN: 4,
-        StationCode: "ST",
-        StationName: "SURAT",
-        RouteNumber: "1",
-        ArrivalTime: "08:55",
-        DepartureTime: "08:58",
-        HaltTime: "03:00",
-        Distance: "263",
-        Day: "1"
-    },
-    {
-        SN: 5,
-        StationCode: "BRC",
-        StationName: "VADODARA JN",
-        RouteNumber: "1",
-        ArrivalTime: "10:13",
-        DepartureTime: "10:16",
-        HaltTime: "03:00",
-        Distance: "392",
-        Day: "1"
-    },
-    {
-        SN: 6,
-        StationCode: "ADI",
-        StationName: "AHMEDABAD JN",
-        RouteNumber: "1",
-        ArrivalTime: "11:25",
-        DepartureTime: "11:30",
-        HaltTime: "05:00",
-        Distance: "491",
-        Day: "1"
-    },
-    {
-        SN: 7,
-        StationCode: "GNC",
-        StationName: "GANDHINAGAR CAP",
-        RouteNumber: "1",
-        ArrivalTime: "12:25",
-        DepartureTime: "---",
-        HaltTime: "---",
-        Distance: "520",
-        Day: "1"
-    }
-];
+import trains from './AllTrainDetail';
 
-export default function AccessibleTable() {
+
+export default function AccessibleTable(props) {
+    const rows = trains[props.data].Stations;
+    console.log('rows', rows);
     return (
         <TableContainer component={Paper}>
             <Table aria-label="caption table">
@@ -105,11 +30,11 @@ export default function AccessibleTable() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row) => (
-                        <TableRow key={row.name}>
+                    {rows.map((row, index) => (
+                        <TableRow key={index}>
                             <TableCell align="right">{row.SN}</TableCell>
-                            <TableCell align="right">{row.StationCode}</TableCell>
-                            <TableCell align="right">{row.StationName}</TableCell>
+                            <TableCell align="right">{row.code}</TableCell>
+                            <TableCell align="right">{row.station}</TableCell>
                             <TableCell align="right">{row.RouteNumber}</TableCell>
                             <TableCell align="right">{row.ArrivalTime}</TableCell>
                             <TableCell align="right">{row.DepartureTime}</TableCell>
