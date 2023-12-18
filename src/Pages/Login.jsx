@@ -28,6 +28,9 @@ const LoginPage = () => {
             console.log('logged in...');
             const result = await firebase.signinUserWithPassword(email, password);
             firebase.setIsLoggedIn(true);
+            window.localStorage.setItem("ISLoggedIN", true);
+            window.localStorage.setItem("LocalEmail", email);
+            window.localStorage.setItem("LocalPassword", password);
             console.log('success', result);
         }
     }
@@ -35,7 +38,7 @@ const LoginPage = () => {
         if (firebase.isLoggedIn) {
             navigate("/");
         }
-    }, [firebase, navigate]);
+    }, [firebase.isLoggedIn]);
 
     const handleGoogleSignIn = async () => {
         try {

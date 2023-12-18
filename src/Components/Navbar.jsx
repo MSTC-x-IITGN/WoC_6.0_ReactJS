@@ -17,6 +17,7 @@ function NavBar() {
         backgroundColor: '#f0fcf3',
         borderRadius: '15px'
     };
+    console.log('inNav : ', firebase.isLoggedIn);
 
     return (
         <nav className="my-2 mx-2 navbar navbar-expand-lg border p-2" style={navbarStyle}>

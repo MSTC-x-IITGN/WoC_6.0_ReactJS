@@ -1,5 +1,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import 'firebase/firestore';
+import { useNavigate } from "react-router-dom";
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    addDoc,
+    query,
+    where,
+    onSnapshot
+} from 'firebase/firestore';
 import { initializeApp } from "firebase/app";
 import {
     getAuth,
@@ -8,6 +17,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup,
     onAuthStateChanged,
+
 } from 'firebase/auth'
 
 const FirebaseContext = createContext(null);
@@ -28,8 +38,26 @@ const firebaseAuth = getAuth(firebaseApp);
 
 const googleProvider = new GoogleAuthProvider();
 
+const db = getFirestore();
+const colRef = collection(db, 'User');
+
+// getDocs(colRef).then((snapshot) => {
+//     let books = [];
+//     snapshot.forEach((doc) => {
+//         books.push({ ...doc.data(), id: doc.id });
+//     });
+//     console.log(books);
+// }).catch((error) => {
+//     console.error('Error getting documents:', error);
+// });
+
+
 export const FirebaseProvider = (props) => {
 
+    const navigate = useNavigate();
+    const loggedIN = window.localStorage.getItem("ISLoggedIN");
+    const localEmail = window.localStorage.getItem("LocalEmail");
+    const localPassword = window.localStorage.getItem("LocalPassword");
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -43,28 +71,77 @@ export const FirebaseProvider = (props) => {
     }, [firebaseAuth]);
 
     const signupWithEmailAndPassword = (email, password) => {
-        createUserWithEmailAndPassword(firebaseAuth, email, password);
+        createUserWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
+            console.log('user Register in:', cred.user.email);
+            setIsLoggedIn(true);
+            const myData = {
+
+                Address: "India",
+                ContactNo: "9999999999",
+                DOB: "01-01-2024",
+                EmailId: cred.user.email,
+                FirstName: "Guest",
+                LastName: "Guest",
+                MiddleName: "Guest",
+                State: "Gujarat",
+                UseName: "Guest",
+                isMale: true
+            }
+            addDoc(colRef,
+                myData
+            )
+                .then(() => {
+                    console.log('added');
+                })
+
+        })
+            .catch((err) => {
+                console.log(err.message);
+                setIsLoggedIn(false);
+            });
     }
 
-    const signinUserWithPassword = (email, password) => {
-        signInWithEmailAndPassword(firebaseAuth, email, password);
+    const signinUserWithPassword = async (email, password) => {
+        await signInWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
+            console.log('user logged in:', cred.user.email);
+
+            setIsLoggedIn(true);
+
+        })
+            .catch((err) => {
+                console.log(err.message);
+                setIsLoggedIn(false);
+            });
     }
 
 
-    const signinWithGoogle = async () => {
-        try {
-            const result = await signInWithPopup(firebaseAuth, googleProvider);
-            // Access user details using result.user if needed
-            return result;
-        } catch (error) {
-            // Handle errors (e.g., display an error message)
-            console.error('Error signing in with Google:', error.message);
-            throw error;
-        }
+    const signinWithGoogle = () => {
+        signInWithPopup(firebaseAuth, googleProvider).then((cred) => {
+            console.log('user logged in:', cred.user);
+            setIsLoggedIn(true);
+        })
+            .catch((err) => {
+                console.log(err.message);
+                setIsLoggedIn(false);
+            });
     };
 
     useEffect(() => {
         console.log('isLoggedIn', isLoggedIn);
+        if (loggedIN == null) {
+            setIsLoggedIn(false);
+        }
+        else {
+            signinUserWithPassword(localEmail, localPassword);
+            setIsLoggedIn(true);
+        }
+        console.log('kjhgfdxz', loggedIN);
+        console.log('1', localEmail);
+        console.log('2', localPassword);
+        // if (!isLoggedIn) {
+        // navigate("/login");
+        // }
+
     }, [isLoggedIn]);
 
     return (

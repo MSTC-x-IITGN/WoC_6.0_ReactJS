@@ -1,19 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from "react-datetime";
 import moment from "moment";
 import "react-datetime/css/react-datetime.css";
+import { useNavigate } from 'react-router-dom';
 
 //new
 import Button from 'react-bootstrap/Button';
 import { useFirebase } from '../Context/Firebase';
 
+import {
+    getFirestore,
+    collection,
+    query, where,
+    onSnapshot,
+    updateDoc,
+    doc
+} from 'firebase/firestore';
+import { Password } from '@mui/icons-material';
+
 
 function Profile() {
 
+
+    const db = getFirestore();
+    const colRef = collection(db, 'User');
+    const localEmail = window.localStorage.getItem("LocalEmail");
+    const localPassword = window.localStorage.getItem("LocalPassword");
+    // console.log('inside profile', localEmail)
+    // console.log('inside profile', q)
+
     //new
     const firebase = useFirebase();
+    const navigate = useNavigate();
     const handleLogIn = () => {
+        window.localStorage.removeItem("ISLoggedIN");
+        window.localStorage.removeItem("LocalEmail");
+        window.localStorage.removeItem("LocalPassword");
         firebase.setIsLoggedIn(false);
+        navigate("/login");
     };
 
 
@@ -26,30 +50,36 @@ function Profile() {
         return current.isBefore(today);
     };
     const handleDateChange = (date) => {
-        setSelectedDate(date);
+        const formattedDate = moment(date).format("DD-MM-YYYY");
+        setSelectedDate(formattedDate);
     };
 
+    const [updated, setUpdated] = useState(false);
+    const [DocId, setDocId] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
-    const [isValid, setIsValid] = useState(false);
+    const [isValid, setIsValid] = useState(true);
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [name2, setName2] = useState('');
     const [name3, setName3] = useState('');
     const [name4, setName4] = useState('');
-    const [isValid2, setIsValid2] = useState(false);
-    const [isValid3, setIsValid3] = useState(false);
-    const [isValid4, setIsValid4] = useState(false);
+    const [isValid2, setIsValid2] = useState(true);
+    const [isValid3, setIsValid3] = useState(true);
+    const [isValid4, setIsValid4] = useState(true);
+    const [gender, setGender] = useState('male');
+    const [AddressField, setAddress] = useState('');
+    const [selectedState, setSelectedState] = useState('');
 
     const handleNameChange2 = (event) => {
         const inputName = event.target.value;
-        const isValidName = /^[a-zA-Z]+$/.test(inputName) && inputName !== '';;
+        const isValidName = /^[a-zA-Z]+$/.test(inputName) && inputName !== '';
         setName2(inputName);
         setIsValid2(isValidName);
     };
 
     const handleNameChange3 = (event) => {
         const inputName = event.target.value;
-        const isValidName = /^[a-zA-Z]+$/.test(inputName) && inputName !== '';;
+        const isValidName = /^[a-zA-Z]+$/.test(inputName) && inputName !== '';
 
         setName3(inputName);
         setIsValid3(isValidName);
@@ -57,18 +87,15 @@ function Profile() {
 
     const handleNameChange4 = (event) => {
         const inputName = event.target.value;
-        const isValidName = /^[a-zA-Z]+$/.test(inputName) && inputName !== '';;
+        const isValidName = /^[a-zA-Z]+$/.test(inputName) && inputName !== '';
 
         setName4(inputName);
         setIsValid4(isValidName);
     };
 
-    const handleGenderChange6 = (event) => {
-    };
-
-    const handleNameChange7 = (event) => {
-        const inputName = event.target.value;
-        setEmail(inputName);
+    const handleGenderChange = (event) => {
+        const selectedGender = event.target.value;
+        setGender(selectedGender);
     };
 
     const handleNameChange8 = (event) => {
@@ -78,8 +105,8 @@ function Profile() {
 
     const validatePhoneNumber = (input) => {
         const value = input.replace(/\D/g, '');
-        const isValid = /^\d{10}$/.test(value);
-        setIsValid(isValid);
+        const isvalid = /^\d{10}$/.test(value);
+        setIsValid(isvalid);
     };
 
     const handleInputChange = (event) => {
@@ -87,6 +114,65 @@ function Profile() {
         setPhoneNumber(inputValue);
         validatePhoneNumber(inputValue);
     };
+
+    const handleStateChange = (event) => {
+        setSelectedState(event.target.value);
+    };
+
+    const UpdateProfile = async () => {
+        if (isValid && isValid2 && isValid3 && isValid4) {
+
+            const docRef = doc(db, 'User', DocId);
+            await updateDoc(docRef, {
+                FirstName: name2,
+                MiddleName: name3,
+                LastName: name4,
+                UseName: username,
+                EmailId: email,
+                isMale: gender,
+                Address: AddressField,
+                ContactNo: phoneNumber,
+                State: selectedState,
+                DOB: selectedDate,
+            })
+                .then(() => {
+                    console.log('updated..', DocId);
+                })
+                .catch((error) => {
+                    console.error('Error updating document: ', error);
+                });
+            setUpdated(!updated);
+        }
+    };
+
+
+    useEffect(() => {
+        const q = query(colRef, where("EmailId", "==", localEmail));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            let books = [];
+            snapshot.docs.forEach((doc) => {
+                books.push({ ...doc.data(), id: doc.id });
+            });
+
+            if (books.length > 0) {
+                console.log('books', books[0]);
+                setName2(books[0].FirstName);
+                setName3(books[0].MiddleName);
+                setName4(books[0].LastName);
+                setUsername(books[0].UseName);
+                setEmail(books[0].EmailId);
+                setGender(books[0].isMale);
+                setAddress(books[0].Address);
+                setSelectedDate(books[0].DOB);
+                setPhoneNumber(books[0].ContactNo);
+                setSelectedState(books[0].State);
+                setDocId(books[0].id);
+            }
+        });
+
+        return () => unsubscribe();
+    }, [firebase.isLoggedIn, updated]);
+
 
     return (
         <>
@@ -103,7 +189,7 @@ function Profile() {
                                     @{username || 'USERNAME'}
                                 </h6>
                                 <h6 className="card-subtitle mb-2 text-muted">
-                                    {email || 'YOUR EMAIL ID'}
+                                    {email}
                                 </h6>
                                 <h6 className="card-subtitle mb-2 text-muted dark">
                                     {(isValid && phoneNumber.length === 10) ? phoneNumber : 'YOUR MOBILE No.'}
@@ -118,20 +204,20 @@ function Profile() {
                                 <div className="my-4"></div>
                                 <div className="my-2">
                                     <label htmlFor="formGroupExampleInput" className="form-label">First Name</label>
-                                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="First Name" onChange={handleNameChange2} />
+                                    <input type="text" className="form-control" id="formGroupExampleInput" defaultValue={name2} placeholder="First Name" onChange={handleNameChange2} />
                                 </div>
 
                                 {(!isValid2) ? <p style={{ color: 'red' }}>Please enter a valid name containing only letters.</p> : <p style={{ color: 'green' }}>Valid.</p>}
 
                                 <div className="my-2">
                                     <label htmlFor="formGroupExampleInput" className="form-label">Middle Name</label>
-                                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Middle Name" onChange={handleNameChange3} />
+                                    <input type="text" className="form-control" id="formGroupExampleInput" defaultValue={name3} placeholder="Middle Name" onChange={handleNameChange3} />
                                 </div>
                                 {!isValid3 ? <p style={{ color: 'red' }}>Please enter a valid name containing only letters.</p> : <p style={{ color: 'green' }}>Valid.</p>}
 
                                 <div className="my-2">
                                     <label htmlFor="formGroupExampleInput" className="form-label">Last Name</label>
-                                    <input type="text" className="form-control" id="formGroupExampleInput" placeholder="Last Name" onChange={handleNameChange4} />
+                                    <input type="text" className="form-control" id="formGroupExampleInput" defaultValue={name4} placeholder="Last Name" onChange={handleNameChange4} />
                                 </div>
                                 {!isValid4 ? <p style={{ color: 'red' }}>Please enter a valid name containing only letters.</p> : <p style={{ color: 'green' }}>Valid.</p>}
 
@@ -139,13 +225,13 @@ function Profile() {
                                     <label htmlFor="username">Username:</label>
                                     <div className="input-group mb-3">
                                         <span className="input-group-text" id="basic-addon1">@</span>
-                                        <input type="text" className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" onChange={handleNameChange8} />
+                                        <input type="text" className="form-control" defaultValue={username} placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" onChange={handleNameChange8} />
                                     </div>
                                 </div>
                                 <div className="my-2">
                                     <div className="mb-3">
                                         <label htmlFor="email">Email:</label>
-                                        <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="name@example.com" onChange={handleNameChange7} />
+                                        <input type="email" className="form-control" id="exampleFormControlInput1" defaultValue={email} disabled />
                                     </div>
                                 </div>
                                 <div>
@@ -153,15 +239,25 @@ function Profile() {
                                     <div className="d-flex justify-content-between" id="gender">
                                         <div>&nbsp;</div>
                                         <div className="form-check">
-                                            <input className="form-check-input" type="radio" name="gender"
-                                                id="flexRadioDefault1" value="male" checked onChange={handleGenderChange6} />
+                                            <input
+                                                type="radio"
+                                                label="Male"
+                                                value="male"
+                                                checked={gender === 'male'}
+                                                onChange={handleGenderChange}
+                                            />
                                             <label className="form-check-label" htmlFor="flexRadioDefault1">
                                                 Male
                                             </label>
                                         </div>
                                         <div className="form-check">
-                                            <input className="form-check-input" type="radio" name="gender"
-                                                id="flexRadioDefault1" value="female" />
+                                            <input
+                                                type="radio"
+                                                label="Female"
+                                                value="female"
+                                                checked={gender === 'female'}
+                                                onChange={handleGenderChange}
+                                            />
                                             <label className="form-check-label" htmlFor="flexRadioDefault1">
                                                 Female
                                             </label>
@@ -174,7 +270,7 @@ function Profile() {
                                 <div className="my-2">
                                     <div className="mb-3">
                                         <label htmlFor="address">Address:</label>
-                                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" defaultValue={AddressField}></textarea>
                                     </div>
                                 </div>
 
@@ -192,11 +288,11 @@ function Profile() {
                                 </div>
 
                                 <div className="my-2 w-50">
-                                    <label htmlFor="username">Username:</label>
+                                    <label htmlFor="username">Phone No. :</label>
                                     <div className="my-2">
                                         <div className="input-group mb-1">
                                             <span className="input-group-text" id="basic-addon1">+91</span>
-                                            <input type="text" className="form-control" placeholder="9900990099" aria-label="9900990099" aria-describedby="basic-addon1" onChange={handleInputChange} />
+                                            <input type="text" className="form-control" defaultValue={phoneNumber} placeholder="9900990099" aria-label="9900990099" aria-describedby="basic-addon1" onChange={handleInputChange} />
                                         </div>
                                         <div className="mx-3">
                                             {(!isValid || phoneNumber.length !== 10) ? <p style={{ color: 'red' }}>Please enter a 10-digit number.</p> : (<p style={{ color: 'green' }}>Valid</p>)}
@@ -204,23 +300,19 @@ function Profile() {
                                     </div>
                                 </div>
                                 <div className="row g-2">
-                                    <div className="col-md-6">
-                                        <label htmlFor="inputCity" className="form-label">City</label>
-                                        <input type="text" className="form-control" id="inputCity" />
-                                    </div>
                                     <div className="col-md-4">
                                         <label htmlFor="inputState" className="form-label">State</label>
-                                        <select id="inputState" className="form-select">
-                                            <option defaultValue>Gujarat</option>
-                                            <option>Maharastra</option>
-                                            <option>Rajsthan</option>
-                                            <option>Uttar paradesh</option>
+                                        <select id="inputState" className="form-select" onChange={handleStateChange} value={selectedState}>
+                                            <option value="Gujarat">Gujarat</option>
+                                            <option value="Maharashtra">Maharashtra</option>
+                                            <option value="Rajasthan">Rajasthan</option>
+                                            <option value="Uttar Pradesh">Uttar Pradesh</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div className="text-center">
-                                    <button className="btn btn-success my-4" type="submit">UPDATE</button>
+                                    <button className="btn btn-success my-4" onClick={UpdateProfile} type="submit">UPDATE</button>
                                 </div>
 
                             </div>
@@ -232,9 +324,18 @@ function Profile() {
 
 
             {/* new */}
-            <Button onClick={handleLogIn} variant='danger'>
+            {/* <Button onClick={handleLogIn} variant='danger'>
                 {firebase.isLoggedIn ? <p>LogOut</p> : <p>//</p>}
-            </Button>
+            </Button> */}
+            <div className="container mt-5">
+                <div className="row d-flex justify-content-center">
+                    <div className="col-md-4 text-center">
+                        <Button variant="danger" onClick={handleLogIn} className="mt-3">
+                            Logout
+                        </Button>
+                    </div>
+                </div>
+            </div>
         </>
     )
 }

@@ -25,9 +25,12 @@ const RegisterPage = () => {
         e.preventDefault();
         if (password && email && validPassword) {
 
-            console.log('logged in...');
+            console.log('Registering in...');
             const result = await firebase.signupWithEmailAndPassword(email, password);
             firebase.setIsLoggedIn(true);
+            window.localStorage.setItem("ISLoggedIN", true);
+            window.localStorage.setItem("LocalEmail", email);
+            window.localStorage.setItem("LocalPassword", password);
             console.log('success', result);
         }
     }
@@ -35,7 +38,7 @@ const RegisterPage = () => {
         if (firebase.isLoggedIn) {
             navigate("/");
         }
-    }, [firebase, navigate]);
+    }, [firebase.isLoggedIn]);
 
     const handleGoogleSignIn = async () => {
         try {
@@ -96,11 +99,11 @@ const RegisterPage = () => {
                     </Alert>
                 }
                 <Button variant="primary" type="submit">
-                    Login
+                    Register
                 </Button>
                 <Button>
-                    <Link className="nav-link" to="/register">
-                        Register
+                    <Link className="nav-link" to="/login">
+                        Login
                     </Link>
                 </Button>
             </Form>
