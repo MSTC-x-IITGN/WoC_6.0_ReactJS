@@ -189,7 +189,7 @@ function FromTo() {
                     </div>
                 </div>
             </div>
-            <div className='mx-5'>
+            {/* <div className='mx-5'>
                 <ul className="list-group">
                     <li className="list-group-item">
                         <div className="form-check">
@@ -224,7 +224,7 @@ function FromTo() {
                         </div>
                     </li>
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 }

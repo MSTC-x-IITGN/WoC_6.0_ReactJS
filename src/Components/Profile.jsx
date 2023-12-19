@@ -145,7 +145,6 @@ function Profile() {
         }
     };
 
-
     useEffect(() => {
         const q = query(colRef, where("EmailId", "==", localEmail));
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -192,7 +191,7 @@ function Profile() {
                                     {email}
                                 </h6>
                                 <h6 className="card-subtitle mb-2 text-muted dark">
-                                    +91 {(isValid && phoneNumber.length === 10) ? phoneNumber : 'YOUR MOBILE No.'}
+                                    {(isValid && phoneNumber.length === 10) ? '+91' + phoneNumber : 'YOUR MOBILE No.'}
                                 </h6>
                             </div>
                         </div>

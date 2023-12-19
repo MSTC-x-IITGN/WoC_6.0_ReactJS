@@ -22,8 +22,23 @@ import { useNavigate } from 'react-router-dom';
 import trains from './AllTrainDetail';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import RemoveIcon from '@mui/icons-material/Remove';
 
-
+import { useState } from 'react';
+//
+import {
+    addDoc,
+    collection,
+    getFirestore,
+    query,
+    where,
+    onSnapshot,
+    deleteDoc,
+    doc
+} from 'firebase/firestore';
+import { useFirebase } from '../Context/Firebase.jsx';
+import { useEffect } from 'react';
+import { useSearchTrain } from '../Context/SearchTrain.jsx';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -39,15 +54,45 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 function TrainBox(props) {
     const navigate = useNavigate();
     const { FromText = '', ToText = '', DateText = '' } = props.data || {};
+    const { onAddToBookList, onRemoveFromBookList, isAddedToBookList } = props;
+    const row = props.data.row;
+    // console.log('row', row);
     const capitalize = (str) => {
         str = str.toLowerCase();
         return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
     }
 
     const [open, setOpen] = React.useState(false);
+    const [myVisibility, setMyVisibility] = useState('');
 
-    const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min) + min);
-    const index = getRandomInt(0, 99);;
+    const firebase = useFirebase();
+    const SerachTrain = useSearchTrain();
+    const path = 'User/' + firebase.UserID + '/BookList';
+    const db = getFirestore();
+    const colRef = collection(db, path);
+
+
+
+    function getCurrentDateTime() {
+        const now = new Date();
+
+        // Get hours, minutes, and seconds
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+
+        // Get day, month, and year
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = now.getFullYear();
+
+        // Format the date and time
+        const formattedDateTime = `${hours}:${minutes}, ${day}/${month}/${year}`;
+
+        return formattedDateTime;
+    }
+
+    const currentDateTime = getCurrentDateTime();
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -61,7 +106,55 @@ function TrainBox(props) {
     }
 
     const addToBookList = () => {
-    }
+        onAddToBookList(row.TrainNumber);
+        addDoc(colRef,
+            {
+                FromText: SerachTrain.FromTextContext,
+                ToText: SerachTrain.ToTextContext,
+                DateText: SerachTrain.DateSelectedContext,
+                Catagories: SerachTrain.CatagoriesContext,
+                AllClasses: SerachTrain.AllClassesContext,
+                TrainNumber: row.TrainNumber,
+                TrainName: row.TrainName,
+                DurationTime: calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime),
+                ArrivalTime: row.Stations[1].ArrivalTime,
+                DepartureTime: row.Stations[5].DepartureTime,
+                AcChairCar: row.JourneyClass.AcChairCar,
+                ExecChairCar: row.JourneyClass.ExecChairCar,
+                AC3Tier: row.JourneyClass.AC3Tier,
+                SecondSitting: row.JourneyClass.SecondSitting,
+                BookedTime: currentDateTime,
+                Cost: "100 INR",
+                isPaid: false
+            }
+        )
+            .then(() => {
+                console.log('added to booklist');
+            })
+    };
+
+    const removeFromBookList = () => {
+        onRemoveFromBookList(row.TrainNumber);
+        const path = 'User/' + firebase.UserID + '/BookList';
+        const colRef2 = collection(db, path);
+        const q = query(colRef2, where("TrainNumber", "==", row.TrainNumber));
+        onSnapshot(q, (snapshot) => {
+            let books = [];
+            snapshot.docs.forEach((doc) => {
+                books.push({ id: doc.id });
+            });
+
+            if (books.length > 0) {
+                const myID = books[0].id;
+                const myDocRef = doc(db, path, myID);
+                deleteDoc(myDocRef)
+                    .then(() => {
+                        console.log('deleted a list item...');
+                    })
+            }
+        });
+    };
+
     function calculateTimeDuration(startTime, endTime) {
         const [startHour, startMinute] = startTime.split(":").map(Number);
         const [endHour, endMinute] = endTime.split(":").map(Number);
@@ -89,14 +182,14 @@ function TrainBox(props) {
                     <Box sx={{ flexGrow: 1 }}>
                         <Grid container spacing={1}>
                             <Grid item xs={4}>
-                                <Typography gutterBottom variant="h4" component="div">
-                                    {trains[index].TrainName}
+                                <Typography gutterBottom variant="h5" component="div">
+                                    {row.TrainName}
                                 </Typography>
                             </Grid>
                             <Grid item xs={4} sx={{ textAlign: 'center' }}>
                                 Runs on:
                                 <Box sx={{ display: 'inline-flex', gap: '2px', alignItems: 'center' }}>
-                                    {trains[index].RunsOn.Monday ?
+                                    {row.RunsOn.Monday ?
                                         <Button sx={{ fontSize: '0.9rem', width: '0.1%' }}>
                                             M
                                         </Button>
@@ -104,7 +197,7 @@ function TrainBox(props) {
                                         <Button sx={{ fontSize: '0.9rem' }} disabled>
                                             M
                                         </Button>
-                                    } {trains[index].RunsOn.Tuesday ?
+                                    } {row.RunsOn.Tuesday ?
                                         <Button sx={{ fontSize: '0.9rem' }}>
                                             T
                                         </Button>
@@ -112,7 +205,7 @@ function TrainBox(props) {
                                         <Button sx={{ fontSize: '0.9rem' }} disabled>
                                             T
                                         </Button>
-                                    } {trains[index].RunsOn.Wednesday ?
+                                    } {row.RunsOn.Wednesday ?
                                         <Button sx={{ fontSize: '0.9rem' }}>
                                             W
                                         </Button>
@@ -120,7 +213,7 @@ function TrainBox(props) {
                                         <Button sx={{ fontSize: '0.9rem' }} disabled>
                                             W
                                         </Button>
-                                    } {trains[index].RunsOn.Thursday ?
+                                    } {row.RunsOn.Thursday ?
                                         <Button sx={{ fontSize: '0.9rem' }}>
                                             T
                                         </Button>
@@ -128,7 +221,7 @@ function TrainBox(props) {
                                         <Button sx={{ fontSize: '0.9rem' }} disabled>
                                             T
                                         </Button>
-                                    } {trains[index].RunsOn.Friday ?
+                                    } {row.RunsOn.Friday ?
                                         <Button sx={{ fontSize: '0.9rem' }}>
                                             F
                                         </Button>
@@ -136,7 +229,7 @@ function TrainBox(props) {
                                         <Button sx={{ fontSize: '0.9rem' }} disabled>
                                             F
                                         </Button>
-                                    } {trains[index].RunsOn.Saturday ?
+                                    } {row.RunsOn.Saturday ?
                                         <Button sx={{ fontSize: '0.9rem' }}>
                                             S
                                         </Button>
@@ -144,7 +237,7 @@ function TrainBox(props) {
                                         <Button sx={{ fontSize: '0.9rem' }} disabled>
                                             S
                                         </Button>
-                                    } {trains[index].RunsOn.Sunday ?
+                                    } {row.RunsOn.Sunday ?
                                         <Button sx={{ fontSize: '0.9rem' }}>
                                             S
                                         </Button>
@@ -166,7 +259,7 @@ function TrainBox(props) {
                                         open={open}
                                     >
                                         <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                            Modal title
+                                            SCHEDULE
                                         </DialogTitle>
                                         <IconButton
                                             aria-label="close"
@@ -181,7 +274,7 @@ function TrainBox(props) {
                                             <CloseIcon />
                                         </IconButton>
                                         <DialogContent dividers>
-                                            <TableOfSchedule data={index} />
+                                            <TableOfSchedule data={row.Stations} />
                                         </DialogContent>
                                         <DialogActions>
                                         </DialogActions>
@@ -195,13 +288,13 @@ function TrainBox(props) {
                         <Box sx={{ flexGrow: 1 }}>
                             <Grid container spacing={2}>
                                 <Grid item xs={4}>
-                                    {trains[index].Stations[0].ArrivalTime} | {capitalize(FromText)} | {DateText}
+                                    {row.Stations[1].ArrivalTime} | {capitalize(FromText)} | {DateText}
                                 </Grid>
                                 <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                    -- {calculateTimeDuration(trains[index].Stations[0].ArrivalTime, trains[index].Stations[0].DepartureTime)} --
+                                    -- {calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime)} --
                                 </Grid>
                                 <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                                    {trains[index].Stations[0].DepartureTime} | {capitalize(ToText)} | {DateText}
+                                    {row.Stations[1].DepartureTime} | {capitalize(ToText)} | {DateText}
                                 </Grid>
                             </Grid>
                         </Box>
@@ -209,7 +302,7 @@ function TrainBox(props) {
                     </Typography>
                     <Box sx={{ flexGrow: 1, marginTop: 1 }} >
                         <Grid container spacing={1}>
-                            {trains[index].JourneyClass.AC3Tier ?
+                            {row.JourneyClass.AC3Tier ?
                                 <Grid item xs={1}>
                                     <Button variant="outlined" size="large">
                                         AC3 Tier
@@ -221,7 +314,7 @@ function TrainBox(props) {
                                     </Button>
                                 </Grid>
                             }
-                            {trains[index].JourneyClass.AcChairCar ?
+                            {row.JourneyClass.AcChairCar ?
                                 <Grid item xs={1}>
                                     <Button variant="outlined" size="large">
                                         AcChair Car
@@ -238,9 +331,15 @@ function TrainBox(props) {
                     </Box>
                 </CardContent>
                 <CardActions>
-                    <Button onClick={addToBookList} variant="outlined" endIcon={<AddIcon />}>
-                        Add to BookList
-                    </Button>
+                    {isAddedToBookList ? (
+                        <Button onClick={removeFromBookList} variant="outlined" endIcon={<RemoveIcon />}>
+                            Remove from BookList
+                        </Button>
+                    ) : (
+                        <Button onClick={addToBookList} variant="outlined" endIcon={<AddIcon />}>
+                            Add to BookList
+                        </Button>
+                    )}
                     <Button onClick={navigateToPayment} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
                         Book
                     </Button>

@@ -47,13 +47,6 @@ function NavBar() {
                         </li>
                         <li className="nav-item">
                             <div className="my-button">
-                                <Link className="nav-link" to="/payment">
-                                    Payment
-                                </Link>
-                            </div>
-                        </li>
-                        <li className="nav-item">
-                            <div className="my-button">
                                 <Link className="nav-link" to="/booklist">
                                     Booklist
                                 </Link>

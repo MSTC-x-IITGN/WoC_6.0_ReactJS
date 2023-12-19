@@ -60,6 +60,7 @@ export const FirebaseProvider = (props) => {
     const localPassword = window.localStorage.getItem("LocalPassword");
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [UserID, setUserID] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
@@ -152,6 +153,8 @@ export const FirebaseProvider = (props) => {
                 signinWithGoogle,
                 setIsLoggedIn,
                 isLoggedIn,
+                UserID,
+                setUserID
             }}>
             {props.children}
         </FirebaseContext.Provider>

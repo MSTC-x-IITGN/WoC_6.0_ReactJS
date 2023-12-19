@@ -5,6 +5,7 @@ import Profile from './Components/Profile.jsx';
 import Homepage from './Components/Homepage.jsx';
 import Footer from './Components/Footer.jsx';
 import Booklist from './Components/Booklist.jsx';
+import Temp from './Components/temp.jsx';
 
 //Pages
 import RegisterPage from './Pages/Register.jsx';
@@ -24,6 +25,7 @@ function App() {
         <Route exact path="/profile" element={<Profile />} />
         <Route exact path="/payment" element={<Payment />} />
         <Route exact path="/booklist" element={<Booklist />} />
+        <Route exact path="/temp" element={<Temp />} />
       </Routes>
       <Footer />
     </>

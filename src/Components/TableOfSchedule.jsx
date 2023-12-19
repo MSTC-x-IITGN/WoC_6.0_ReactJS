@@ -8,10 +8,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import trains from './AllTrainDetail';
+import { useState } from 'react';
 
 
 export default function AccessibleTable(props) {
-    const rows = trains[props.data].Stations;
+    const rows = props.data;
+
     console.log('rows', rows);
     return (
         <TableContainer component={Paper}>
@@ -33,8 +35,8 @@ export default function AccessibleTable(props) {
                     {rows.map((row, index) => (
                         <TableRow key={index}>
                             <TableCell align="right">{row.SN}</TableCell>
-                            <TableCell align="right">{row.code}</TableCell>
-                            <TableCell align="right">{row.station}</TableCell>
+                            <TableCell align="right">{row.StationCode}</TableCell>
+                            <TableCell align="right">{row.StationName}</TableCell>
                             <TableCell align="right">{row.RouteNumber}</TableCell>
                             <TableCell align="right">{row.ArrivalTime}</TableCell>
                             <TableCell align="right">{row.DepartureTime}</TableCell>
@@ -45,6 +47,6 @@ export default function AccessibleTable(props) {
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer >
     );
 }
