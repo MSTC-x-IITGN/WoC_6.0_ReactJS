@@ -11,79 +11,81 @@ import { useFirebase } from '../Context/Firebase';
 import {
     getFirestore,
     collection,
-    getDocs
+    getDocs,
+    query,
+    where,
+    addDoc,
+    onSnapshot
 } from 'firebase/firestore';
 
 export default function Searching() {
 
     const [isSearch, setIsSearch] = useState(false);
     const [bookList, setBookList] = useState([]);
-    // const [listItem, setListItem] = useState(false);
-
-    let bookedTrains = [];
-
-    const firebase = useFirebase();
-    const db = getFirestore();
-
-
-    // onSnapshot(q, (snapshot) => {
-    //     let books = [];
-    //     snapshot.docs.forEach((doc) => {
-    //         books.push({ ...doc.data(), id: doc.id });
-    //     });
-
-    //     if (books.length > 0) {
-    //         firebase.setUserID(books[0].id);
-    //     }
-    // });
-
-
+    const [TrainbookingList, setTrainbookingList] = useState([]);
     const [FromText, setFromText] = useState('');
     const [ToText, setToText] = useState('');
     const [DateText, setDateText] = useState('');
-
+    const [TrainID, setTrainID] = useState('');
 
     const SearchTrain = useSearchTrain();
+    const firebase = useFirebase();
+    const db = getFirestore();
 
     const printall = () => {
-        // const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min) + min);
-        // const randomInteger = getRandomInt(3, 7);
-        // setListItem(randomInteger);
-        const path = 'User/' + firebase.UserID + '/BookList';
-        const colRef = collection(db, path);
+        console.log(SearchTrain.FromTextContext);
+        console.log(SearchTrain.ToTextContext);
+        console.log(SearchTrain.DateSelectedContext);
 
-        getDocs(colRef).then((snapshot) => {
-            let books = [];
+        const setPath = 'User/' + firebase.UserID + '/SearchList';
+        const setColRef = collection(db, setPath);
+        const query1 = where('SearchFromText', '==', SearchTrain.FromTextContext);
+        const query2 = where('SearchToText', '==', SearchTrain.ToTextContext);
+        const query3 = where('SearchDateText', '==', SearchTrain.DateSelectedContext);
+        const combinedQuery = query(setColRef, query1, query2, query3);
+
+        onSnapshot(combinedQuery, (snapshot) => {
+            let Upperbooks = [];
             snapshot.forEach((doc) => {
-                books.push({ ...doc.data(), id: doc.id });
-                // bookedTrains.push(doc.TrainNumber);
+                Upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            books.forEach((element) => {
-                bookedTrains.push(element.TrainNumber);
-            })
-            setBookList(bookedTrains);
-            bookedTrains = [];
-        }).catch((error) => {
-            console.error('Error getting documents:', error);
-        });
+            console.log('books::::', Upperbooks);
+            if (Upperbooks.length === 0) {
+                addDoc(setColRef, {
+                    SearchFromText: SearchTrain.FromTextContext,
+                    SearchToText: SearchTrain.ToTextContext,
+                    SearchDateText: SearchTrain.DateSelectedContext,
+                    SearchCatagories: SearchTrain.CatagoriesContext,
+                    SearchAllClasses: SearchTrain.AllClassesContext,
+                    Trains: trains
+                }).then(() => {
+                    console.log('added searchList');
+                    onSnapshot(combinedQuery, (snapshot) => {
+                        let books = [];
+                        snapshot.forEach((doc) => {
+                            books.push({ ...doc.data(), id: doc.id });
+                        });
+                        setTrainbookingList(books[0].Trains);
+                        console.log('books1234::::', books[0]);
+                    })
+                });
+            } else {
+                setTrainID(Upperbooks[0].id);
+                setTrainbookingList(Upperbooks[0].Trains);
+                console.log('books1234::::', Upperbooks[0]);
+            }
+        })
+
         setIsSearch(true);
         setFromText(SearchTrain.FromTextContext);
         setToText(SearchTrain.ToTextContext);
         setDateText(SearchTrain.DateSelectedContext);
-
-    };
-
-    const addToBookList = (trainNumber) => {
-        setBookList((prevList) => [...prevList, trainNumber]);
-    };
-
-    const removeFromBookList = (trainNumber) => {
-        setBookList((prevList) => prevList.filter((item) => item !== trainNumber));
     };
 
     useEffect(() => {
         console.log('Updated bookList', bookList);
     }, [bookList]);
+
     return (
         <>
             <div className='d-flex justify-content-center'>
@@ -98,13 +100,10 @@ export default function Searching() {
             </div>
 
             {isSearch &&
-                trains.map((row) => (
+                TrainbookingList.map((row, index) => (
                     <TrainBox
-                        key={row.TrainNumber}
-                        data={{ FromText, ToText, DateText, row }}
-                        onAddToBookList={addToBookList}
-                        onRemoveFromBookList={removeFromBookList}
-                        isAddedToBookList={bookList.includes(row.TrainNumber)}
+                        key={index}
+                        data={{ FromText, ToText, DateText, row, TrainID }}
                     />
                 ))
             }

@@ -34,7 +34,9 @@ import {
     where,
     onSnapshot,
     deleteDoc,
-    doc
+    doc,
+    updateDoc,
+    getDocs
 } from 'firebase/firestore';
 import { useFirebase } from '../Context/Firebase.jsx';
 import { useEffect } from 'react';
@@ -53,10 +55,9 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 function TrainBox(props) {
     const navigate = useNavigate();
-    const { FromText = '', ToText = '', DateText = '' } = props.data || {};
-    const { onAddToBookList, onRemoveFromBookList, isAddedToBookList } = props;
+    const { FromText = '', ToText = '', DateText = '', TrainID = '' } = props.data || {};
     const row = props.data.row;
-    // console.log('row', row);
+    console.log('row', row);
     const capitalize = (str) => {
         str = str.toLowerCase();
         return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
@@ -106,53 +107,91 @@ function TrainBox(props) {
     }
 
     const addToBookList = () => {
-        onAddToBookList(row.TrainNumber);
-        addDoc(colRef,
-            {
-                FromText: SerachTrain.FromTextContext,
-                ToText: SerachTrain.ToTextContext,
-                DateText: SerachTrain.DateSelectedContext,
-                Catagories: SerachTrain.CatagoriesContext,
-                AllClasses: SerachTrain.AllClassesContext,
-                TrainNumber: row.TrainNumber,
-                TrainName: row.TrainName,
-                DurationTime: calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime),
-                ArrivalTime: row.Stations[1].ArrivalTime,
-                DepartureTime: row.Stations[5].DepartureTime,
-                AcChairCar: row.JourneyClass.AcChairCar,
-                ExecChairCar: row.JourneyClass.ExecChairCar,
-                AC3Tier: row.JourneyClass.AC3Tier,
-                SecondSitting: row.JourneyClass.SecondSitting,
-                BookedTime: currentDateTime,
-                Cost: "100 INR",
-                isPaid: false
-            }
-        )
-            .then(() => {
-                console.log('added to booklist');
+
+        const path = 'User/' + firebase.UserID + '/SearchList';
+        const colRef = collection(db, path);
+
+        getDocs(colRef).then((snapshot) => {
+            let upperbooks = [];
+            snapshot.forEach((doc) => {
+                upperbooks.push({ ...doc.data(), id: doc.id });
+            });
+            console.log('UPPERbooks2::::', upperbooks);
+
+            let myListOfBook;
+            upperbooks.forEach((element) => {
+                if (element.id == TrainID) {
+                    console.log('element.Trains : ', element);
+
+                    element.Trains.forEach((ele) => {
+                        if (ele.TrainNumber === row.TrainNumber) {
+                            ele.isBooked = true;
+                        }
+                    })
+                    myListOfBook = element;
+                }
+
             })
+            console.log('myListOfBook...', myListOfBook);
+            const docRef = doc(db, path, TrainID);
+            updateDoc(docRef, {
+                ...myListOfBook
+            })
+                .then(() => {
+                    console.log('Booked..');
+                })
+                .catch((error) => {
+                    console.error('Error booked : ', error);
+                });
+
+        })
+            .catch((error) => {
+                console.error('Error viewing document: ', error);
+            });
     };
 
     const removeFromBookList = () => {
-        onRemoveFromBookList(row.TrainNumber);
-        const path = 'User/' + firebase.UserID + '/BookList';
-        const colRef2 = collection(db, path);
-        const q = query(colRef2, where("TrainNumber", "==", row.TrainNumber));
-        onSnapshot(q, (snapshot) => {
-            let books = [];
-            snapshot.docs.forEach((doc) => {
-                books.push({ id: doc.id });
-            });
 
-            if (books.length > 0) {
-                const myID = books[0].id;
-                const myDocRef = doc(db, path, myID);
-                deleteDoc(myDocRef)
-                    .then(() => {
-                        console.log('deleted a list item...');
+        const path = 'User/' + firebase.UserID + '/SearchList';
+        const colRef = collection(db, path);
+
+        getDocs(colRef).then((snapshot) => {
+            let upperbooks = [];
+            snapshot.forEach((doc) => {
+                upperbooks.push({ ...doc.data(), id: doc.id });
+            });
+            console.log('UPPERbooks2::::', upperbooks);
+
+            let myListOfBook;
+            upperbooks.forEach((element) => {
+                if (element.id == TrainID) {
+                    console.log('element.Trains : ', element);
+
+                    element.Trains.forEach((ele) => {
+                        if (ele.TrainNumber === row.TrainNumber) {
+                            ele.isBooked = false;
+                        }
                     })
-            }
-        });
+                    myListOfBook = element;
+                }
+
+            })
+            console.log('myListOfBook...', myListOfBook);
+            const docRef = doc(db, path, TrainID);
+            updateDoc(docRef, {
+                ...myListOfBook
+            })
+                .then(() => {
+                    console.log('Booked..');
+                })
+                .catch((error) => {
+                    console.error('Error booked : ', error);
+                });
+
+        })
+            .catch((error) => {
+                console.error('Error viewing document: ', error);
+            });
     };
 
     function calculateTimeDuration(startTime, endTime) {
@@ -331,7 +370,7 @@ function TrainBox(props) {
                     </Box>
                 </CardContent>
                 <CardActions>
-                    {isAddedToBookList ? (
+                    {row.isBooked ? (
                         <Button onClick={removeFromBookList} variant="outlined" endIcon={<RemoveIcon />}>
                             Remove from BookList
                         </Button>

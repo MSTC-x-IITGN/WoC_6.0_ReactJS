@@ -32,62 +32,64 @@ const PaymentForm = () => {
     const navigate = useNavigate();
 
     const handleCardNumberChange = (e) => {
-        const input = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
-        let formattedCardNumber = '';
+        // const input = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+        // let formattedCardNumber = '';
 
-        for (let i = 0; i < input.length; i += 4) {
-            formattedCardNumber += input.slice(i, i + 4) + ' ';
-        }
+        // for (let i = 0; i < input.length; i += 4) {
+        //     formattedCardNumber += input.slice(i, i + 4) + ' ';
+        // }
 
-        setCardNumber(formattedCardNumber.trim());
+        // setCardNumber(formattedCardNumber.trim());
     };
 
     const handleCvcChange = (e) => {
-        const input = e.target.value.replace(/\D/g, '').slice(0, 3); // Remove non-numeric characters and limit to 3 digits
-        setCvc(input);
+        // const input = e.target.value.replace(/\D/g, '').slice(0, 3); // Remove non-numeric characters and limit to 3 digits
+        // setCvc(input);
     };
 
     const handlePayment = () => {
-        const path = 'User/' + firebase.UserID + '/PayList';
+
+        const searchID = window.localStorage.getItem("PayID");
+        const trainID = window.localStorage.getItem("TrainID");
+        window.localStorage.removeItem("PayID");
+        window.localStorage.removeItem("TrainID");
+
+
+        const path = 'User/' + firebase.UserID + '/SearchList';
         const colRef = collection(db, path);
 
-        // const path = 'User/' + firebase.UserID + '/BookList';
-        // const colRef = collection(db, path);
+        onSnapshot(colRef, (snapshot) => {
 
-        getDocs(colRef).then((snapshot) => {
-            let books = [];
+            let upperbooks = [];
             snapshot.forEach((doc) => {
-                books.push({ ...doc.data(), id: doc.id });
+                upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            // PayListID = books[0].DataId;
-            const newPath = 'User/' + firebase.UserID + '/BookList';
-            const docRef = doc(db, newPath, books[0].DataId);
+            console.log('UPPERbooks2::::', upperbooks);
+
+            let myListOfBook;
+            upperbooks.forEach((element) => {
+                if (element.id == searchID) {
+                    console.log('element.Trains : ', element);
+                    element.Trains.forEach((ele) => {
+                        if (ele.TrainNumber === trainID) {
+                            ele.SearchIsPaid = true;
+                        }
+                    })
+                    myListOfBook = element;
+                }
+            })
+            console.log('myListOfBook...', myListOfBook);
+            const docRef = doc(db, path, searchID);
             updateDoc(docRef, {
-                isPaid: true
+                ...myListOfBook
             })
                 .then(() => {
-                    console.log('updated../Paid', books[0].DataId);
+                    console.log('Booked..');
                 })
                 .catch((error) => {
-                    console.error('Error updating document: ', error);
+                    console.error('Error booked : ', error);
                 });
-
-            const deletePath = 'User/' + firebase.UserID + '/PayList';
-
-            books.forEach((element) => {
-                const myDelDocRef = doc(db, deletePath, element.id);
-                deleteDoc(myDelDocRef)
-                    .then(() => {
-                        console.log('deleted.../paylist');
-                    })
-            })
-
-            // console.log('Processing payment...');
-            // console.log(PayListID);
-        }).catch((error) => {
-            console.error('Error getting documents:', error);
-        });
-
+        })
 
 
         navigate("/booklist");

@@ -1,5 +1,7 @@
 const trains = [
     {
+        "SearchIsPaid": false,
+        "isBooked": false,
         "TrainName": "VANDE BHARAT EXP",
         "TrainNumber": "20901",
         "FromStations": "MUMBAI CENTRAL",
@@ -100,6 +102,8 @@ const trains = [
         ]
     },
     {
+        "SearchIsPaid": false,
+        "isBooked": false,
         "TrainName": "BL VADNAGAR SUP",
         "TrainNumber": "20959",
         "FromStations": "VALSAD",
@@ -255,6 +259,8 @@ const trains = [
         ]
     },
     {
+        "SearchIsPaid": false,
+        "isBooked": false,
         "TrainName": "Gujarat Express",
         "TrainNumber": "19011",
         "FromStations": "MUMBAI CENTRAL",
@@ -355,6 +361,8 @@ const trains = [
         ]
     },
     {
+        "SearchIsPaid": false,
+        "isBooked": false,
         "TrainName": "Super Fast Express",
         "TrainNumber": "20960",
         "FromStations": "VALSAD",

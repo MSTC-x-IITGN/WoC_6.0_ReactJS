@@ -5,7 +5,10 @@ import {
     doc,
     updateDoc,
     collection,
-    onSnapshot
+    onSnapshot,
+    deleteDoc,
+    where,
+    query
 } from 'firebase/firestore';
 import { useFirebase } from '../Context/Firebase';
 import { useEffect, useState } from 'react';
@@ -28,6 +31,8 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import CancelIcon from '@mui/icons-material/Cancel';
 
 import { useNavigate } from 'react-router-dom';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { Tune } from '@mui/icons-material';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -50,67 +55,126 @@ function Booklist() {
     const db = getFirestore();
     const navigate = useNavigate();
 
-    const CancelBookList = (e) => {
-        const path = 'User/' + firebase.UserID + '/BookList';
-        const docRef = doc(db, path, e.id);
-        updateDoc(docRef, {
-            isPaid: false
-        })
-            .then(() => {
-                console.log('Updated document:', e.id);
-            })
-            .catch((error) => {
-                console.error('Error updating document: ', error);
+    const removeFromBookList = (e) => {
+        const path = 'User/' + firebase.UserID + '/SearchList';
+        const colRef = collection(db, path);
+
+        onSnapshot(colRef, (snapshot) => {
+            let upperbooks = [];
+            snapshot.forEach((doc) => {
+                upperbooks.push({ ...doc.data(), id: doc.id });
             });
-        console.log("Cancelled BookList...");
+            console.log('UPPERbooks2::::', upperbooks);
+
+            let myListOfBook;
+            upperbooks.forEach((element) => {
+                if (element.id === e.SearchID) {
+                    console.log('element.Trains : ', element);
+
+                    element.Trains.forEach((ele) => {
+                        if (ele.TrainNumber === e.TrainNumber) {
+                            ele.isBooked = false;
+                            ele.SearchIsPaid = false;
+                            setIsPaid(false);
+                        }
+                    });
+                    myListOfBook = element;
+                }
+            });
+            console.log('myListOfBook...', myListOfBook);
+            const docRef = doc(db, path, e.SearchID);
+            updateDoc(docRef, {
+                ...myListOfBook,
+            })
+                .then(() => {
+                    console.log('Booked..');
+                })
+                .catch((error) => {
+                    console.error('Error booked : ', error);
+                });
+        });
+    }
+
+    const CancelBookList = (e) => {
+        const path = 'User/' + firebase.UserID + '/SearchList';
+        const colRef = collection(db, path);
+
+        onSnapshot(colRef, (snapshot) => {
+            let upperbooks = [];
+            snapshot.forEach((doc) => {
+                upperbooks.push({ ...doc.data(), id: doc.id });
+            });
+            console.log('UPPERbooks2::::', upperbooks);
+
+            let myListOfBook;
+            upperbooks.forEach((element) => {
+                if (element.id == e.SearchID) {
+                    console.log('element.Trains : ', element);
+                    element.Trains.forEach((ele) => {
+                        if (ele.TrainNumber === e.TrainNumber) {
+                            ele.SearchIsPaid = false;
+                            setIsPaid(false);
+
+                        }
+                    })
+                    myListOfBook = element;
+                }
+            })
+            console.log('myListOfBook...', myListOfBook);
+            const docRef = doc(db, path, e.SearchID);
+            updateDoc(docRef, {
+                ...myListOfBook
+            })
+                .then(() => {
+                    console.log('Booked..');
+                })
+                .catch((error) => {
+                    console.error('Error booked : ', error);
+                });
+        })
     };
 
     const payBookList = (e) => {
-        const path = 'User/' + firebase.UserID + '/PayList';
-        const colRef = collection(db, path);
 
-        // const q = query(colRef, where("EmailId", "==", localEmail));
-        // onSnapshot(q, (snapshot) => {
-        //     let books = [];
-        //     snapshot.docs.forEach((doc) => {
-        //         books.push({ id: doc.id });
-        //     });
-
-        //     if (books.length > 0) {
-        //         firebase.setUserID(books[0].id);
-        //     }
-        // });
-
-        addDoc(colRef,
-            { DataId: e.id }
-        )
-            .then(() => {
-                console.log('added ispaid');
-            })
+        window.localStorage.setItem("PayID", e.SearchID);
+        window.localStorage.setItem("TrainID", e.TrainNumber);
+        setIsPaid(true);
 
         navigate("/payment");
     }
     useEffect(() => {
         console.log('Fetching documents...');
         if (firebase.UserID != undefined && firebase.UserID) {
-            const path = 'User/' + firebase.UserID + '/BookList';
-            const colRef = collection(db, path);
 
-            const unsubscribe = onSnapshot(colRef, (snapshot) => {
-                let books = [];
+            const upperPath = 'User/' + firebase.UserID + '/SearchList';
+            const upppercolRef = collection(db, upperPath);
+            onSnapshot(upppercolRef, (snapshot) => {
+                let upperbooks = [];
                 snapshot.forEach((doc) => {
-                    books.push({ ...doc.data(), id: doc.id });
+                    upperbooks.push({ ...doc.data(), id: doc.id });
                 });
+                console.log('UPPERbooks2::::', upperbooks);
 
-                setList(books);
-                console.log('Fetched documents:', books);
-            }, (error) => {
-                console.error('Error getting documents:', error);
-            });
-
-            // Cleanup the listener when the component unmounts
-            return () => unsubscribe();
+                let upperBookedList = [];
+                upperbooks.forEach((element) => {
+                    const temp = {
+                        SearchAllClasses: element.SearchAllClasses,
+                        SearchCatagories: element.SearchCatagories,
+                        SearchDateText: element.SearchDateText,
+                        SearchFromText: element.SearchFromText,
+                        SearchToText: element.SearchToText,
+                        SearchID: element.id
+                    }
+                    element.Trains.forEach((ele) => {
+                        if (ele.isBooked === true) {
+                            upperBookedList.push({ ...temp, ...ele });
+                        }
+                    })
+                })
+                setList((prevList) => [...upperBookedList]);
+            })
         }
+
     }, [firebase.UserID]);
 
     return (
@@ -146,23 +210,26 @@ function Booklist() {
                                     <Typography sx={{ width: '33%', flexShrink: 0 }}>
                                         {index + 1}
                                     </Typography>
-                                    <Typography sx={{ color: 'text.secondary' }}>{row.FromText} -- {row.ToText} {row.isPaid ? 'Paid' : ''} </Typography>
+                                    <Typography sx={{ color: 'text.secondary' }}>{row.SearchFromText} -- {row.SearchToText} {row.SearchIsPaid ? 'Paid' : ''} </Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <Typography>
                                         <Box sx={{ width: '100%' }}>
                                             <Grid rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                                                 <Grid item xs={12}>
-                                                    From : {row.FromText}
+                                                    From : {row.SearchFromText}
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    To : {row.ToText}
+                                                    To : {row.SearchToText}
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    Date : {row.DateText}
+                                                    Date : {row.SearchDateText}
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    Catagory : {row.Catagories}
+                                                    AllClasses : {row.SearchAllClasses}
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    Catagory : {row.SearchCatagories}
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     TrainNumber : {row.TrainNumber}
@@ -198,7 +265,7 @@ function Booklist() {
                                                     BookedTime : {row.BookedTime}
                                                 </Grid>
                                                 <Grid item xs={4}>
-                                                    {!row.isPaid ? (
+                                                    {!row.SearchIsPaid ? (
                                                         <Button onClick={() => { payBookList(row) }} variant="contained" endIcon={<PaymentIcon />}>
                                                             PAY NOW
                                                         </Button>
@@ -207,6 +274,9 @@ function Booklist() {
                                                             Cancel Ticket
                                                         </Button>
                                                     )}
+                                                    <Button onClick={() => { removeFromBookList(row) }} variant="contained" color='inherit' endIcon={<RemoveIcon />}>
+                                                        Remove Item
+                                                    </Button>
                                                 </Grid>
                                             </Grid>
                                         </Box>
