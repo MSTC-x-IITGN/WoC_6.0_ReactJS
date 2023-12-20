@@ -104,6 +104,8 @@ function TrainBox(props) {
     const navigateToPayment = (e) => {
         e.preventDefault();
         addToBookList();
+        window.localStorage.setItem("PayID", e.TrainID);
+        window.localStorage.setItem("TrainID", e.TrainNumber);
         navigate("/payment");
     }
 
