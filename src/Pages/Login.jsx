@@ -107,8 +107,8 @@ const LoginPage = () => {
                     </Link>
                 </Button>
             </Form>
-            <h2 className='container mt-5'>OR</h2>
-            <Button onClick={handleGoogleSignIn} variant='info'>Signing with Google</Button>
+            {/* <h2 className='container mt-5'>OR</h2> */}
+            {/* <Button onClick={handleGoogleSignIn} variant='info'>Signing with Google</Button> */}
         </div>
     )
 }

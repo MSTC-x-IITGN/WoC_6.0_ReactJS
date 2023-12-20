@@ -13,21 +13,46 @@ import LoginPage from './Pages/Login.jsx';
 
 //CSS
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
+  const localEmail = window.localStorage.getItem("LocalEmail");
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (localEmail == null) {
+      navigate("/login");
+    }
+    else {
+      navigate("/");
+    }
+  }, [localEmail]);
   return (
     <>
-      <NavBar />
-      <Routes>
-        <Route exact path="/" element={<Homepage />} />
-        <Route exact path="/login" element={<LoginPage />} />
-        <Route exact path="/register" element={<RegisterPage />} />
-        <Route exact path="/profile" element={<Profile />} />
-        <Route exact path="/payment" element={<Payment />} />
-        <Route exact path="/booklist" element={<Booklist />} />
-        <Route exact path="/temp" element={<Temp />} />
-      </Routes>
-      <Footer />
+      {
+        (localEmail == null ?
+          (
+            <Routes>
+              <Route exact path="/login" element={<LoginPage />} />
+              <Route exact path="/register" element={<RegisterPage />} />
+            </Routes>
+          )
+          :
+          (
+            <>
+              <NavBar />
+              <Routes>
+                <Route exact path="/" element={<Homepage />} />
+                <Route exact path="/profile" element={<Profile />} />
+                <Route exact path="/payment" element={<Payment />} />
+                <Route exact path="/booklist" element={<Booklist />} />
+                <Route exact path="/temp" element={<Temp />} />
+              </Routes>
+              <Footer />
+            </>
+          )
+        )
+      }
     </>
   );
 }
