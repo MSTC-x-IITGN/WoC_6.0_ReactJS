@@ -103,6 +103,7 @@ function TrainBox(props) {
 
     const navigateToPayment = (e) => {
         e.preventDefault();
+        addToBookList();
         navigate("/payment");
     }
 
