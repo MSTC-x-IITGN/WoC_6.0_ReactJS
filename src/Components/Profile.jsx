@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 //new
 import Button from 'react-bootstrap/Button';
 import { useFirebase } from '../Context/Firebase';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import {
     getFirestore,
@@ -331,6 +332,7 @@ function Profile() {
                     <div className="col-md-4 text-center">
                         <Button variant="danger" onClick={handleLogIn} className="mt-3">
                             Logout
+                            <LogoutIcon />
                         </Button>
                     </div>
                 </div>

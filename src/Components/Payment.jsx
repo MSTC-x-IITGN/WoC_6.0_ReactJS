@@ -58,7 +58,7 @@ const PaymentForm = () => {
         const path = 'User/' + firebase.UserID + '/SearchList';
         const colRef = collection(db, path);
 
-        onSnapshot(colRef, (snapshot) => {
+        getDocs(colRef).then((snapshot) => {
 
             let upperbooks = [];
             snapshot.forEach((doc) => {
@@ -90,8 +90,6 @@ const PaymentForm = () => {
                     console.error('Error booked : ', error);
                 });
         })
-
-
         navigate("/booklist");
     };
 

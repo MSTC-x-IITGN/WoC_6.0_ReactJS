@@ -59,7 +59,7 @@ function Booklist() {
         const path = 'User/' + firebase.UserID + '/SearchList';
         const colRef = collection(db, path);
 
-        onSnapshot(colRef, (snapshot) => {
+        getDocs(colRef).then((snapshot) => {
             let upperbooks = [];
             snapshot.forEach((doc) => {
                 upperbooks.push({ ...doc.data(), id: doc.id });
@@ -93,55 +93,20 @@ function Booklist() {
                     console.error('Error booked : ', error);
                 });
         });
-    }
-
-    const CancelBookList = (e) => {
-        const path = 'User/' + firebase.UserID + '/SearchList';
-        const colRef = collection(db, path);
-
-        onSnapshot(colRef, (snapshot) => {
-            let upperbooks = [];
-            snapshot.forEach((doc) => {
-                upperbooks.push({ ...doc.data(), id: doc.id });
-            });
-            console.log('UPPERbooks2::::', upperbooks);
-
-            let myListOfBook;
-            upperbooks.forEach((element) => {
-                if (element.id == e.SearchID) {
-                    console.log('element.Trains : ', element);
-                    element.Trains.forEach((ele) => {
-                        if (ele.TrainNumber === e.TrainNumber) {
-                            ele.SearchIsPaid = false;
-                            setIsPaid(false);
-
-                        }
-                    })
-                    myListOfBook = element;
-                }
-            })
-            console.log('myListOfBook...', myListOfBook);
-            const docRef = doc(db, path, e.SearchID);
-            updateDoc(docRef, {
-                ...myListOfBook
-            })
-                .then(() => {
-                    console.log('Booked..');
-                })
-                .catch((error) => {
-                    console.error('Error booked : ', error);
-                });
-        })
     };
 
-    const payBookList = (e) => {
-
+    const handleEvent = (e) => {
         window.localStorage.setItem("PayID", e.SearchID);
         window.localStorage.setItem("TrainID", e.TrainNumber);
-        setIsPaid(true);
 
-        navigate("/payment");
+        if (!e.SearchIsPaid) {
+            navigate("/payment");
+        }
+        else {
+            navigate("/cancelticket");
+        }
     }
+
     useEffect(() => {
         console.log('Fetching documents...');
         if (firebase.UserID != undefined && firebase.UserID) {
@@ -265,15 +230,9 @@ function Booklist() {
                                                     BookedTime : {row.BookedTime}
                                                 </Grid>
                                                 <Grid item xs={4}>
-                                                    {!row.SearchIsPaid ? (
-                                                        <Button onClick={() => { payBookList(row) }} variant="contained" endIcon={<PaymentIcon />}>
-                                                            PAY NOW
-                                                        </Button>
-                                                    ) : (
-                                                        <Button onClick={() => { CancelBookList(row) }} variant="contained" color='error' endIcon={<CancelIcon />}>
-                                                            Cancel Ticket
-                                                        </Button>
-                                                    )}
+                                                    <Button onClick={() => { handleEvent(row) }} variant="contained" color={!row.SearchIsPaid ? 'info' : 'error'} endIcon={!row.SearchIsPaid ? <PaymentIcon /> : <CancelIcon />}>
+                                                        {!row.SearchIsPaid ? 'PAY NOW' : 'Cancel Ticket'}
+                                                    </Button>
                                                     <Button onClick={() => { removeFromBookList(row) }} variant="contained" color='inherit' endIcon={<RemoveIcon />}>
                                                         Remove Item
                                                     </Button>

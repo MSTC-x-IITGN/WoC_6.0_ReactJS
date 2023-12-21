@@ -78,8 +78,8 @@ function NavBar() {
                                         <hr className="dropdown-divider" />
                                     </li>
                                     <li>
-                                        <Link className="dropdown-item" to="#something-else">
-                                            Something else here
+                                        <Link className="dropdown-item" to="/mystery">
+                                            MYSTERY BOX
                                         </Link>
                                     </li>
                                 </ul>
