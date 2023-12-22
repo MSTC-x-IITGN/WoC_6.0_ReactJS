@@ -129,6 +129,11 @@ function FromTo() {
         }
     }, [FromText, ToText, isEnable]);
 
+    useEffect(() => {
+        setFromText(SerachTrain.FromTextContext);
+        setToText(SerachTrain.ToTextContext);
+    }, []);
+
     return (
         <div className="container d-flex justify-content-center align-items-center my-5">
             <div className="card w-50 border-0">

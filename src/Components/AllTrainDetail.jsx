@@ -1,4 +1,4 @@
-const trains = [
+let trains = [
     {
         "SearchIsPaid": false,
         "isBooked": false,
@@ -518,4 +518,25 @@ const trains = [
         ]
     }
 ]
+
+
+const prefixes = ['Express', 'Super', 'Rapid', 'Golden', 'Royal', 'Flying', 'Silver', 'Thunder'];
+const middles = ['Star', 'Arrow', 'Dragon', 'Phoenix', 'Eagle', 'Lion', 'Tiger', 'Panther'];
+const suffixes = ['Limited', 'Express', 'Runner', 'Flyer', 'Speed', 'Jet', 'Sprinter', 'Champion'];
+
+function generateRandomTrainName() {
+    const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+    const randomMiddle = middles[Math.floor(Math.random() * middles.length)];
+    const randomSuffix = suffixes[Math.floor(Math.random() * suffixes.length)];
+
+    return `${randomPrefix} ${randomMiddle} ${randomSuffix}`;
+}
+
+function runInfinitely() {
+    for (let i = 0; i < trains.length; i++) {
+        trains[i].TrainName = generateRandomTrainName();
+    }
+}
+setInterval(runInfinitely, 3000);
+
 export default trains;

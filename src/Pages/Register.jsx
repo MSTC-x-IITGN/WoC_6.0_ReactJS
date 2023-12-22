@@ -13,6 +13,8 @@ const RegisterPage = () => {
     const [Emailcheck, setEmailcheck] = useState(false);
     const [passwordcheck, setpasswordcheck] = useState(false);
 
+    const [justVerify, setJustVerify] = useState(false);
+
     const firebase = useFirebase();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -25,12 +27,13 @@ const RegisterPage = () => {
         e.preventDefault();
         if (password && email && validPassword) {
 
-            console.log('Registering in...');
+            console.log('Regstering in...');
             const result = await firebase.signupWithEmailAndPassword(email, password);
-            firebase.setIsLoggedIn(true);
-            window.localStorage.setItem("ISLoggedIN", true);
-            window.localStorage.setItem("LocalEmail", email);
-            window.localStorage.setItem("LocalPassword", password);
+            // firebase.setIsLoggedIn(true);
+            setJustVerify(true);
+            // window.localStorage.setItem("ISLoggedIN", true);
+            // window.localStorage.setItem("LocalEmail", email);
+            // window.localStorage.setItem("LocalPassword", password);
             console.log('success', result);
         }
     }
@@ -101,12 +104,15 @@ const RegisterPage = () => {
                 <Button variant="primary" type="submit">
                     Register
                 </Button>
-                <Button>
-                    <Link className="nav-link" to="/login">
-                        Login
-                    </Link>
+                <Button onClick={() => { navigate("/login") }} >
+                    Login
                 </Button>
             </Form>
+            {!firebase.isLoggedIn && justVerify &&
+                <Alert variant='danger'>
+                    Email-ID is already in use
+                </Alert>
+            }
             {/* <h2 className='container mt-5'>OR</h2> */}
             {/* <Button onClick={handleGoogleSignIn} variant='info'>Signing with Google</Button> */}
         </div>

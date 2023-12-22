@@ -267,7 +267,7 @@ function Profile() {
                                     </div>
                                 </div>
 
-                                <div className="my-2">
+                                <div className="my-2" style={{ display: 'none' }}>
                                     <div className="mb-3">
                                         <label htmlFor="address">Address:</label>
                                         <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" defaultValue={AddressField}></textarea>

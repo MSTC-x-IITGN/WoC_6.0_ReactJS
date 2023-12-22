@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, TextField, Grid, Container, MenuItem, Typography } from '@mui/material';
 import {
     getFirestore,
@@ -6,91 +6,136 @@ import {
     getDocs,
     updateDoc,
     doc,
-    snapshot,
-    query,
-    where,
-    deleteDoc,
-    onSnapshot
 } from 'firebase/firestore';
 import { useFirebase } from '../Context/Firebase';
 import { useNavigate } from 'react-router-dom';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import Alert from '@mui/material/Alert';
 
 const countries = [
     { value: 'us', label: 'United States' },
     { value: 'ca', label: 'Canada' },
+    { value: 'in', label: 'India' }
     // Add more countries as needed
 ];
 
 const PaymentForm = () => {
+
+    let PAYDATA;
+
     const [cardNumber, setCardNumber] = useState('');
-    const [expiryDate, setExpiryDate] = useState('');
+    const [cardNumberDisplay, setCardNumberDisplay] = useState('');
+    const [isCardNumberValid, setIsCardNumberValid] = useState(false);
+    const [month, setMonth] = useState('');
+    const [isValidMonth, setIsValidMonth] = useState(true);
+    const [isValidYear, setIsValidYear] = useState(true);
+    const [year, setYear] = useState('');
     const [cvc, setCvc] = useState('');
     const [selectedCountry, setSelectedCountry] = useState('');
+    const [isValidPayment, setIsValidPayment] = useState(true);
 
     const firebase = useFirebase();
     const db = getFirestore();
     const navigate = useNavigate();
 
     const handleCardNumberChange = (e) => {
-        // const input = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
-        // let formattedCardNumber = '';
+        const input = e.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+        // setCardNumber(input);
 
-        // for (let i = 0; i < input.length; i += 4) {
-        //     formattedCardNumber += input.slice(i, i + 4) + ' ';
-        // }
+        // Format for display
+        let formattedCardNumber = '';
+        for (let i = 0; i < input.length; i += 4) {
+            formattedCardNumber += input.slice(i, i + 4) + ' ';
+        }
 
-        // setCardNumber(formattedCardNumber.trim());
+        // Set the formatted number with spaces for display
+        const temp = formattedCardNumber.trim();
+        if (temp.length < 20) {
+            setCardNumberDisplay(formattedCardNumber.trim());
+        }
     };
 
     const handleCvcChange = (e) => {
-        // const input = e.target.value.replace(/\D/g, '').slice(0, 3); // Remove non-numeric characters and limit to 3 digits
-        // setCvc(input);
+        const input = e.target.value.replace(/\D/g, '').slice(0, 3); // Remove non-numeric characters and limit to 3 digits
+        setCvc(input);
+    };
+
+    const handleMonthChange = (e) => {
+        const input = e.target.value.replace(/\D/g, '').slice(0, 2); // Remove non-numeric characters and limit to 3 digits
+        setMonth(input);
+
+        const val = Number(input);
+        if (val > 12) {
+            setIsValidMonth(false);
+        } else {
+            setIsValidMonth(true);
+        }
+    };
+
+    const handleYearChange = (e) => {
+        const input = e.target.value.replace(/\D/g, '').slice(0, 2); // Remove non-numeric characters and limit to 3 digits
+        setYear(input);
+
+        const val = Number(input);
+        if (val < 24) {
+            setIsValidYear(false);
+        } else {
+            setIsValidYear(true);
+        }
     };
 
     const handlePayment = () => {
 
-        const searchID = window.localStorage.getItem("PayID");
-        const trainID = window.localStorage.getItem("TrainID");
-        window.localStorage.removeItem("PayID");
-        window.localStorage.removeItem("TrainID");
+        if (cardNumberDisplay.length === 19 &&
+            isValidMonth &&
+            isValidYear &&
+            cvc.length === 3 &&
+            selectedCountry != '') {
+            setIsValidPayment(true);
 
+            const searchID = window.localStorage.getItem("PayID");
+            const trainID = window.localStorage.getItem("TrainID");
+            window.localStorage.removeItem("PayID");
+            window.localStorage.removeItem("TrainID");
 
-        const path = 'User/' + firebase.UserID + '/SearchList';
-        const colRef = collection(db, path);
+            const path = 'User/' + firebase.UserID + '/SearchList';
+            const colRef = collection(db, path);
 
-        getDocs(colRef).then((snapshot) => {
-
-            let upperbooks = [];
-            snapshot.forEach((doc) => {
-                upperbooks.push({ ...doc.data(), id: doc.id });
-            });
-            console.log('UPPERbooks2::::', upperbooks);
-
-            let myListOfBook;
-            upperbooks.forEach((element) => {
-                if (element.id == searchID) {
-                    console.log('element.Trains : ', element);
-                    element.Trains.forEach((ele) => {
-                        if (ele.TrainNumber === trainID) {
-                            ele.SearchIsPaid = true;
-                        }
-                    })
-                    myListOfBook = element;
-                }
-            })
-            console.log('myListOfBook...', myListOfBook);
-            const docRef = doc(db, path, searchID);
-            updateDoc(docRef, {
-                ...myListOfBook
-            })
-                .then(() => {
-                    console.log('Booked..');
-                })
-                .catch((error) => {
-                    console.error('Error booked : ', error);
+            getDocs(colRef).then((snapshot) => {
+                let upperbooks = [];
+                snapshot.forEach((doc) => {
+                    upperbooks.push({ ...doc.data(), id: doc.id });
                 });
-        })
-        navigate("/booklist");
+
+                let myListOfBook;
+                upperbooks.forEach((element) => {
+                    if (element.id === searchID) {
+                        element.Trains.forEach((ele) => {
+                            if (ele.TrainNumber === trainID) {
+                                ele.SearchIsPaid = true;
+                            }
+                        });
+                        myListOfBook = element;
+                    }
+                });
+
+                const docRef = doc(db, path, searchID);
+                updateDoc(docRef, {
+                    ...myListOfBook
+                })
+                    .then(() => {
+                        console.log('Booked..');
+                    })
+                    .catch((error) => {
+                        console.error('Error booked : ', error);
+                    });
+            });
+
+            navigate("/booklist");
+        }
+        else {
+            setIsValidPayment(false);
+        }
     };
 
     return (
@@ -104,17 +149,33 @@ const PaymentForm = () => {
                         label="Card Number"
                         variant="outlined"
                         fullWidth
-                        value={cardNumber}
+                        value={cardNumberDisplay}
                         onChange={handleCardNumberChange}
                     />
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={2} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <DateRangeIcon style={{ margin: '0.3em', fontSize: '2em' }} />
+                </Grid>
+                <Grid item xs={2}>
                     <TextField
-                        label="Expiry Date"
+                        label="Month"
                         variant="outlined"
+                        color={isValidMonth ? 'info' : 'error'}
                         fullWidth
-                        value={expiryDate}
-                        onChange={(e) => setExpiryDate(e.target.value)}
+                        placeholder='MM'
+                        value={month}
+                        onChange={handleMonthChange}
+                    />
+                </Grid>
+                <Grid item xs={2}>
+                    <TextField
+                        label="Year"
+                        variant="outlined"
+                        color={isValidYear ? 'info' : 'error'}
+                        fullWidth
+                        placeholder='YY'
+                        value={year}
+                        onChange={handleYearChange}
                     />
                 </Grid>
                 <Grid item xs={6}>
@@ -142,6 +203,9 @@ const PaymentForm = () => {
                         ))}
                     </TextField>
                 </Grid>
+                {!isValidPayment && <Grid item xs={12}>
+                    <Alert severity="error">Please, Enter valid details</Alert>
+                </Grid>}
                 <Grid item xs={12}>
                     <Button variant="contained" color="primary" onClick={handlePayment}>
                         Pay Now

@@ -75,6 +75,9 @@ export const FirebaseProvider = (props) => {
         createUserWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
             console.log('user Register in:', cred.user.email);
             setIsLoggedIn(true);
+            window.localStorage.setItem("ISLoggedIN", true);
+            window.localStorage.setItem("LocalEmail", email);
+            window.localStorage.setItem("LocalPassword", password);
             const myData = {
 
                 Address: "India",
@@ -105,8 +108,10 @@ export const FirebaseProvider = (props) => {
     const signinUserWithPassword = async (email, password) => {
         await signInWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
             console.log('user logged in:', cred.user.email);
-
             setIsLoggedIn(true);
+            window.localStorage.setItem("ISLoggedIN", true);
+            window.localStorage.setItem("LocalEmail", email);
+            window.localStorage.setItem("LocalPassword", password);
 
         })
             .catch((err) => {

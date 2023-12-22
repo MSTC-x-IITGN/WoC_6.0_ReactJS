@@ -16,11 +16,7 @@ import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -33,6 +29,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { useNavigate } from 'react-router-dom';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { Tune } from '@mui/icons-material';
+
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -143,7 +146,7 @@ function Booklist() {
     }, [firebase.UserID]);
 
     return (
-        <><Typography style={{ margin: 'auto', marginTop: "4%", marginBottom: "4%", width: '90%' }} variant="h4" gutterBottom>
+        <><Typography style={{ margin: 'auto', marginTop: "4%", marginBottom: "4%", width: '90%' }} variant="h4">
             Booklist
         </Typography>
             {myList.length == 0 ?
@@ -163,88 +166,85 @@ function Booklist() {
                 </>
                 :
                 <>
-
-                    <span style={{ margin: 'auto', marginTop: "2%", marginBottom: "2%", width: '80%' }}>
-                        {myList.map((row, index) => (
-                            <Accordion key={index} expanded={expanded === `panel${index}`} style={{ width: "90%", margin: "auto" }} onChange={handleChange(`panel${index}`)} sx={{ marginBottom: 2 }}>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1bh-content"
-                                    id="panel1bh-header"
-                                >
-                                    <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                                        {index + 1}
-                                    </Typography>
-                                    <Typography sx={{ color: 'text.secondary' }}>{row.SearchFromText} -- {row.SearchToText} {row.SearchIsPaid ? 'Paid' : ''} </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Typography>
-                                        <Box sx={{ width: '100%' }}>
-                                            <Grid rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                                                <Grid item xs={12}>
-                                                    From : {row.SearchFromText}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    To : {row.SearchToText}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    Date : {row.SearchDateText}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    AllClasses : {row.SearchAllClasses}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    Catagory : {row.SearchCatagories}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    TrainNumber : {row.TrainNumber}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    TrainName : {row.TrainName}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    DurationTime : {row.DurationTime}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    ArrivalTime : {row.ArrivalTime}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    DepartureTime : {row.DepartureTime}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    AcChairCar : {row.AcChairCar ? 'Yes' : 'No'}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    AC3Tier : {row.AC3Tier ? 'Yes' : 'No'}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    ExecChairCar : {row.ExecChairCar ? 'Yes' : 'No'}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    SecondSitting : {row.SecondSitting ? 'Yes' : 'No'}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    Cost : {row.Cost}
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    BookedTime : {row.BookedTime}
-                                                </Grid>
-                                                <Grid item xs={4}>
-                                                    <Button onClick={() => { handleEvent(row) }} variant="contained" color={!row.SearchIsPaid ? 'info' : 'error'} endIcon={!row.SearchIsPaid ? <PaymentIcon /> : <CancelIcon />}>
-                                                        {!row.SearchIsPaid ? 'PAY NOW' : 'Cancel Ticket'}
-                                                    </Button>
-                                                    <Button onClick={() => { removeFromBookList(row) }} variant="contained" color='inherit' endIcon={<RemoveIcon />}>
-                                                        Remove Item
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
-                                        </Box>
-                                    </Typography>
-                                </AccordionDetails>
-                            </Accordion>
-                        ))
-                        }
-                    </span>
+                    <Box sx={{ flexGrow: 1 }} style={{ margin: '4%' }}>
+                        <Grid container spacing={2}>
+                            {myList.map((row, index) => (
+                                <Grid item xs={10}>
+                                    <Accordion style={{ backgroundColor: 'ghostwhite' }}>
+                                        <AccordionSummary
+                                            expandIcon={<ExpandMoreIcon />}
+                                            aria-controls="panel1a-content"
+                                            id="panel1a-header"
+                                        >
+                                            <Typography>{index + 1}{')'}  {row.SearchFromText} to {row.SearchToText} , {row.SearchDateText} &nbsp;&nbsp;&nbsp;&nbsp;
+                                                {row.SearchIsPaid && <Button variant="outlined" color='info'>
+                                                    Paid
+                                                </Button>}
+                                            </Typography>
+                                        </AccordionSummary>
+                                        <AccordionDetails>
+                                            <Typography>
+                                                <Box sx={{ flexGrow: 1 }}>
+                                                    <Grid container spacing={2}>
+                                                        <Grid item xs={12}>
+                                                            Train Name : {row.TrainName}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            From : {row.SearchFromText}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            To : {row.SearchToText}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            Catagory : {row.SearchCatagories}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            Date : {row.SearchDateText}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            AllClasses : {row.SearchAllClasses}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            TrainNumber : {row.TrainNumber}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            AcChairCar : {row.JourneyClass.AcChairCar ? 'Yes' : 'No'}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            AC3Tier : {row.JourneyClass.AC3Tier ? 'Yes' : 'No'}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            ExecChairCar : {row.JourneyClass.ExecChairCar ? 'Yes' : 'No'}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            SecondSitting : {row.JourneyClass.SecondSitting ? 'Yes' : 'No'}
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            Price : 100Rs.
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            <Button onClick={() => { handleEvent(row) }} variant="contained" color={!row.SearchIsPaid ? 'info' : 'error'} endIcon={!row.SearchIsPaid ? <PaymentIcon /> : <CancelIcon />}>
+                                                                {!row.SearchIsPaid ? 'PAY NOW' : 'Cancel Ticket'}
+                                                            </Button>
+                                                        </Grid>
+                                                        <Grid item xs={8}>
+                                                            <Button onClick={() => { removeFromBookList(row) }}
+                                                                variant="outlined"
+                                                                color='inherit'
+                                                                style={{ display: !row.SearchIsPaid ? 'block' : 'none' }}
+                                                            >
+                                                                Remove Item <RemoveIcon />
+                                                            </Button>
+                                                        </Grid>
+                                                    </Grid>
+                                                </Box>
+                                            </Typography>
+                                        </AccordionDetails>
+                                    </Accordion>
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
                 </>
             }</>
     )
