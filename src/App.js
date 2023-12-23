@@ -18,6 +18,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import './App.css';
+
 function App() {
   const localEmail = window.localStorage.getItem("LocalEmail");
   const navigate = useNavigate();
