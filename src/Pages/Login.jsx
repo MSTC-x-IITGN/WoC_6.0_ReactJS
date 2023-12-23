@@ -1,20 +1,33 @@
-import React, { useEffect, useState } from 'react';
+import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 import { useFirebase } from '../Context/Firebase';
 import Alert from 'react-bootstrap/Alert';
-import { Link } from 'react-router-dom';
+import '../CSS/Login.css';
 
 
-const LoginPage = () => {
+const defaultTheme = createTheme();
 
+export default function LoginPage() {
     const [Emailcheck, setEmailcheck] = useState(false);
     const [passwordcheck, setpasswordcheck] = useState(false);
-
     const [justVerify, setJustVerify] = useState(false);
-
     const firebase = useFirebase();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,97 +39,153 @@ const LoginPage = () => {
         setpasswordcheck(true);
         e.preventDefault();
         if (password && email && validPassword) {
-
             console.log('logged in...');
             const result = await firebase.signinUserWithPassword(email, password);
-            // firebase.setIsLoggedIn(true);
             setJustVerify(true);
-            // window.localStorage.setItem("ISLoggedIN", true);
-            // window.localStorage.setItem("LocalEmail", email);
-            // window.localStorage.setItem("LocalPassword", password);
             console.log('success', result);
         }
-    }
+    };
+
     useEffect(() => {
         if (firebase.isLoggedIn) {
             navigate("/");
         }
     }, [firebase.isLoggedIn]);
 
-    const handleGoogleSignIn = async () => {
-        try {
-            const result = await firebase.signinWithGoogle();
-            firebase.setIsLoggedIn(true);
-            console.log('Google sign-in success', result);
-        } catch (error) {
-            // Handle errors
-            console.error('Google sign-in error', error.message);
-        }
-    };
-
-
     const handlePasswordofLogin = (e) => {
         const input = e.target.value;
         setpasswordcheck(true);
         setPassword(input);
-        if (input.length < 8) { setValidPassword(false); return; }
-        else {
+        if (input.length < 8) {
+            setValidPassword(false);
+            return;
+        } else {
             setValidPassword(true);
         }
     }
 
     return (
-        <div className='container m-5'>
-            <h1>Login</h1>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                        onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
-                        value={email}
-                        type="email"
-                        placeholder="Enter email" />
-                </Form.Group>
-                {!email && Emailcheck &&
-                    <Alert variant='danger'>
-                        This field cannot be empty.
-                    </Alert>
-                }
-
-                <Form.Group className="mb-3" controlId="formBasicPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        onChange={handlePasswordofLogin}
-                        value={password}
-                        type="password"
-                        placeholder="Password" />
-                </Form.Group>
-                {!password && passwordcheck &&
-                    <Alert variant='danger'>
-                        This field cannot be empty.
-                    </Alert>
-                }
-                {!validPassword && password &&
-                    <Alert variant='danger'>
-                        The password must contain at least 8 digits.
-                    </Alert>
-                }
-                <Button variant="primary" type="submit">
-                    Login
-                </Button>
-                <Button onClick={() => { navigate("/register") }}>
-                    Register
-                </Button>
-            </Form>
-            {!firebase.isLoggedIn && justVerify &&
-                <Alert variant='danger'>
-                    Invalid Email/Password
-                </Alert>
-            }
-            {/* <h2 className='container mt-5'>OR</h2> */}
-            {/* <Button onClick={handleGoogleSignIn} variant='info'>Signing with Google</Button> */}
+        <div className='my-glass-effect'>
+            <ThemeProvider theme={defaultTheme} >
+                <Container component="main" maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+                    <CssBaseline />
+                    <Box
+                        sx={{
+                            marginTop: 12,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            backgroundColor: "rgba(255, 255, 255, 0.4)",
+                            borderRadius: "2em",
+                            padding: '3em',
+                            height: 'auto',
+                        }}
+                    >
+                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography component="h1" variant="h5" sx={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}>
+                            Sign in
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
+                            {!(!email && Emailcheck) ? (
+                                <TextField
+                                    id="standard-basic-1"
+                                    variant="standard"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                    color='secondary'
+                                    onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
+                                    value={email}
+                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                />
+                            ) : (
+                                <TextField
+                                    error
+                                    helperText={(!email && Emailcheck) ? ('This field cannot be empty.') : ('')}
+                                    id="standard-basic-1"
+                                    variant="standard"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    label="Email Address"
+                                    name="email"
+                                    autoComplete="email"
+                                    autoFocus
+                                    color='secondary'
+                                    onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
+                                    value={email}
+                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                />
+                            )}
+                            {validPassword ? (
+                                <TextField
+                                    id="standard-basic-2"
+                                    variant="standard"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    color='secondary'
+                                    autoComplete="current-password"
+                                    onChange={handlePasswordofLogin}
+                                    value={password}
+                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                />
+                            ) : (
+                                <TextField
+                                    error
+                                    helperText={(!password && passwordcheck) ? ('This field cannot be empty.') : ((!validPassword && password) ? ('The password must contain at least 8 digits.') : '')}
+                                    id="standard-basic-2"
+                                    variant="standard"
+                                    margin="normal"
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    color='secondary'
+                                    autoComplete="current-password"
+                                    onChange={handlePasswordofLogin}
+                                    value={password}
+                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                />
+                            )}
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color='secondary'
+                                sx={{ mt: 3, mb: 2 }}
+                                style={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}
+                            >
+                                Sign In
+                            </Button>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    {!firebase.isLoggedIn && justVerify && (
+                                        <Alert variant='danger'>
+                                            Invalid Email and/or Password
+                                        </Alert>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Button color='secondary' onClick={() => { navigate("/register") }} variant="text" style={{ fontFamily: 'Quicksand', fontWeight: 'bold', color: 'ghostwhite', textDecoration: 'underline' }}>
+                                        Don't have an account? Sign Up
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                    </Box>
+                </Container>
+            </ThemeProvider>
         </div>
-    )
+    );
 }
-
-export default LoginPage;
