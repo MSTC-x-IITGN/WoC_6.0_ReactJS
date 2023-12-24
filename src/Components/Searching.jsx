@@ -17,6 +17,8 @@ import {
     addDoc,
     onSnapshot
 } from 'firebase/firestore';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 export default function Searching() {
 
@@ -81,15 +83,25 @@ export default function Searching() {
         setToText(SearchTrain.ToTextContext);
         setDateText(SearchTrain.DateSelectedContext);
     };
-
     useEffect(() => {
-        console.log('Updated bookList', bookList);
-    }, [bookList]);
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+    }, []);
+
 
     return (
         <>
-            <div className='d-flex justify-content-center'>
+            <div data-aos="fade-up" className='d-flex justify-content-center mt-5'>
                 <Button
+                    style={{
+                        fontFamily: 'Quicksand',
+                        fontWeight: 'bold',
+                        fontSize: 'large'
+                    }}
+
                     variant="contained"
                     disabled={!SearchTrain.isFromTo}
                     onClick={printall}

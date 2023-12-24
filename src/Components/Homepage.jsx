@@ -11,6 +11,7 @@ import {
     where,
     onSnapshot
 } from 'firebase/firestore';
+import '../CSS/Homepage.css';
 
 function Homepage() {
 
@@ -35,10 +36,12 @@ function Homepage() {
     const imageURL1 = "https://i.pinimg.com/originals/4b/a7/2c/4ba72cbf2a6495c267d3707d1e3fac00.jpg";
     return (
         <>
-            <Title />
-            <FromTo />
-            <Filters />
-            <Searching />
+            <div className='my-hompage'>
+                <Title />
+                <FromTo />
+                <Filters />
+                <Searching />
+            </div>
         </>
     )
 }

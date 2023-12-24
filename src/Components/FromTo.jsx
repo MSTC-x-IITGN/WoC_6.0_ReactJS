@@ -1,9 +1,25 @@
 import React, { useState } from 'react';
 import words from './Stations.jsx';
-import Button from 'react-bootstrap/Button';
 import { useEffect } from 'react';
 import { useSearchTrain } from '../Context/SearchTrain.jsx';
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
+import {
+    Container,
+    Card,
+    Button,
+    CardContent,
+    Typography,
+    TextField,
+    List,
+    ListItem,
+    ListItemText,
+} from '@mui/material';
+
+import '../CSS/FromTo.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 class TrieNode {
     constructor() {
@@ -134,102 +150,122 @@ function FromTo() {
         setToText(SerachTrain.ToTextContext);
     }, []);
 
+    const theme = createTheme({
+        typography: {
+            fontFamily: 'Quicksand',
+            body1: {
+                fontWeight: '600',
+                fontSize: 'large',
+            },
+        },
+    });
+
+    useEffect(() => {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+    }, []);
+
+
+
     return (
-        <div className="container d-flex justify-content-center align-items-center my-5">
-            <div className="card w-50 border-0">
-                <h3 className="card my-2 py-3 text-center">
-                    Select Your Journey
-                </h3>
-                <div className="card-body">
-                    <div className="mb-3 input-group-lg">
-                        <label htmlFor="FromText" className="form-label fs-5">From : </label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="FromText"
-                            placeholder="Your location"
-                            value={FromText}
-                            onChange={changingFromText}
-                        />
-                        <div className="list-group">
-                            {FromText !== '' && suggestionsFrom.map((suggestion, index) => (
-                                <button key={index} type="button" className="list-group-item list-group-item-action"
-                                    onClick={() => selectThisFromCity(suggestion)}>
-                                    <div>
-                                        {suggestion.station} - {suggestion.code}
-                                    </div>
-                                    <div className='fw-semibold'>
-                                        {suggestion.state}
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-                    <div className="text-center">
-                        <button type="button" className="btn btn-outline-primary" onClick={swapText}>
-                            <i className="fa-solid fa-arrow-right-arrow-left fa-rotate-90 fa-2xl"></i>
-                        </button>
-                    </div>
-                    <div className="mb-3 input-group-lg">
-                        <label htmlFor="ToText" className="form-label fs-5">To : </label>
-                        <input type="text"
-                            className="form-control"
-                            id="ToText"
-                            placeholder="Destination"
-                            value={ToText}
-                            onChange={changingToText}
-                        />
-                        <div className="list-group">
-                            {ToText !== '' && suggestionsTo.map((suggestion, index) => (
-                                <button key={index} type="button" className="list-group-item list-group-item-action"
-                                    onClick={() => selectThisToCity(suggestion)}>
-                                    <div>
-                                        {suggestion.station} - {suggestion.code}
-                                    </div>
-                                    <div className='fw-semibold'>
-                                        {suggestion.state}
-                                    </div></button>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* <div className='mx-5'>
-                <ul className="list-group">
-                    <li className="list-group-item">
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                Railway Pass Concession
-                            </label>
-                        </div>
-                    </li>
-                    <li className="list-group-item">
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                Flexible With Date
-                            </label>
-                        </div>
-                    </li>
-                    <li className="list-group-item">
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                Person With Disability Concession
-                            </label>
-                        </div>
-                    </li>
-                    <li className="list-group-item">
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                Train with Available Berth
-                            </label>
-                        </div>
-                    </li>
-                </ul>
-            </div> */}
+        <div data-aos="fade-up">
+            <ThemeProvider theme={theme}>
+                <Container className="pt-5 pb-3 d-flex justify-content-center align-items-center my-5">
+                    <Card style={{
+                        backgroundColor: 'rgb(252, 252, 252)',
+                        boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)',
+                        borderRadius: '2em',
+                        width: '100%',
+                        maxWidth: '38em',
+                    }} variant="outlined">
+                        <Typography variant="h4" component="div" align="center" className="my-2 py-3">
+                            Select Your Journey
+                        </Typography>
+                        <CardContent>
+                            <div className="mb-3 input-group-lg">
+                                <label htmlFor="FromText" className="form-label fs-5">
+                                    From :
+                                </label>
+                                <TextField
+                                    type="text"
+                                    id="FromText"
+                                    placeholder="Your location"
+                                    value={FromText}
+                                    onChange={changingFromText}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                                <List>
+                                    {FromText !== '' &&
+                                        suggestionsFrom.map((suggestion, index) => (
+                                            <ListItem
+                                                key={index}
+                                                style={{ marginBottom: '0.4em', backgroundColor: 'rgb(240,240,240)', borderRadius: '0.5em' }}
+                                                onClick={() => selectThisFromCity(suggestion)}
+                                            >
+                                                <ListItemText>
+                                                    <div>
+                                                        {suggestion.station} - {suggestion.code}
+                                                    </div>
+                                                    <div className='fw-semibold'>
+                                                        {suggestion.state}
+                                                    </div>
+                                                </ListItemText>
+                                            </ListItem>
+                                        ))}
+                                </List>
+                            </div>
+                            <div className="text-center">
+                                <Button variant="contained" color="primary" onClick={swapText} style={{
+                                    width: 'auto',
+                                    height: 'auto',
+                                    borderRadius: '2em',
+                                    backgroundColor: 'rgb(244,244,244)',
+                                    color: 'black'
+                                }}>
+                                    <SwapVertIcon style={{ fontSize: '40px' }} />
+                                </Button>
+                            </div>
+                            <div className="mb-3 input-group-lg">
+                                <label htmlFor="ToText" className="form-label fs-5">
+                                    To :
+                                </label>
+                                <TextField
+                                    type="text"
+                                    id="ToText"
+                                    placeholder="Destination"
+                                    value={ToText}
+                                    onChange={changingToText}
+                                    variant="outlined"
+                                    fullWidth
+                                />
+                                <List>
+                                    {ToText !== '' &&
+                                        suggestionsTo.map((suggestion, index) => (
+                                            <ListItem
+                                                key={index}
+                                                style={{ marginBottom: '0.4em', backgroundColor: 'rgb(240,240,240)', borderRadius: '0.5em' }}
+                                                onClick={() => selectThisToCity(suggestion)}
+                                            >
+                                                <ListItemText>
+                                                    <div>
+                                                        {suggestion.station} - {suggestion.code}
+                                                    </div>
+                                                    <div className='fw-semibold'>
+                                                        {suggestion.state}
+                                                    </div>
+                                                </ListItemText>
+                                            </ListItem>
+                                        ))}
+                                </List>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </Container>
+            </ThemeProvider>
         </div>
     );
 }

@@ -3,11 +3,24 @@ import DatePicker from "react-datetime";
 import moment from "moment";
 import "react-datetime/css/react-datetime.css";
 import { useSearchTrain } from "../Context/SearchTrain";
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import {
+    Card,
+    CardContent,
+    Typography,
+    Select,
+    MenuItem,
+    FormControl,
+    InputLabel
+} from '@mui/material';
+import '../CSS/Filter.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function Filters() {
 
     const SearchTrain = useSearchTrain();
-
     const yesterday = moment().subtract(1, "day");
     const currentDate = moment().format("DD-MM-YYYY");
     const [selectedDate, setSelectedDate] = useState(currentDate);
@@ -34,84 +47,89 @@ function Filters() {
     useEffect(() => {
         SearchTrain.setCatagoriesContext(selectedValueCatagories);
         SearchTrain.setAllClassesContext(selectedValue);
-
-        // const originalString = selectedDate._d;
-        // const index = originalString.search(/ {4}/);
-        // const cutString = originalString.substring(0, index);
-
         SearchTrain.setDateSelectedContext(selectedDate);
     }, [selectedValueCatagories, selectedValue, selectedDate]);
 
+    useEffect(() => {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+    }, []);
     return (
         <>
-            {/* ________________________________________________________________________ */}
-
-
-            <div className="card" style={{ margin: "2%" }}>
-                <div className="card-group">
-                    <div className="card">
-                        {/* <img src="..." className="card-img-top" alt="..." /> */}
-                        <div className="card-body">
-                            <h5 className="card-title">Date :</h5>
-                            <DatePicker
-                                dateFormat="DD-MM-YYYY"
-                                timeFormat={false}
-                                isValidDate={disPastDate}
-                                value={selectedDate}
-                                onChange={handleDateChange}
-                                inputProps={{ readOnly: true }}
-                            />
-                        </div>
-                    </div>
-                    <div className="card">
-                        {/* <img src="..." className="card-img-top" alt="..." /> */}
-                        <div className="card-body">
-                            <h5 className="card-title">All Classes</h5>
-                            <select
-                                className="form-select"
-                                aria-label="Default select example"
-                                value={selectedValue}
-                                onChange={handleSelectChange}
-                            >
-                                <option value>All Classes</option>
-                                <option value="Anubhuti Class (EA)">Anubhuti Class (EA)</option>
-                                <option value="AC First Class (1A)">AC First Class (1A)</option>
-                                <option value="Vistadome AC (EV)">Vistadome AC (EV)</option>
-                                <option value="Exec. Chair Car (EC)">Exec. Chair Car (EC)</option>
-                                <option value="AC 2 Tier (2A)">AC 2 Tier (2A)</option>
-                                <option value="First Class (FC)">First Class (FC)</option>
-                                <option value="AC 3 Tier (3A)">AC 3 Tier (3A)</option>
-                                <option value="AC 3 Economy (3E)">AC 3 Economy (3E)</option>
-                                <option value="Vistadome Chair Car (VC)">Vistadome Chair Car (VC)</option>
-                                <option value="AC Chair car (CC)">AC Chair car (CC)</option>
-                                <option value="Sleeper (SL)">Sleeper (SL)</option>
-                                <option value="Vistadome Non AC (VS)">Vistadome Non AC (VS)</option>
-                                <option value="Second Sitting (2S)">Second Sitting (2S)</option>
-                            </select>
-
-                        </div>
-                    </div>
-                    <div className="card">
-                        {/* <img src="..." className="card-img-top" alt="..." /> */}
-                        <div className="card-body">
-                            <h5 className="card-title">CATAGORIES</h5>
-                            <select
-                                className="form-select"
-                                aria-label="Default select example"
-                                value={selectedValueCatagories}
-                                onChange={handleSelectChangeONCatagories}
-                            >
-                                <option value="GENERAL">GENERAL</option>
-                                <option value="LADIES">LADIES</option>
-                                <option value="LOWER BERTH/SR.CITIZEN">LOWER BERTH/SR.CITIZEN</option>
-                                <option value="PERSON WITH DISABILITY">PERSON WITH DISABILITY</option>
-                                <option value="DUTY PASS">DUTY PASS</option>
-                                <option value="TATKAL">TATKAL</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div >
+            <div data-aos="fade-up">
+                <CardContent>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={4}>
+                            <Card sx={{ height: '8em', backgroundColor: 'rgb(250, 250, 250)', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '1em' }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        Date :
+                                    </Typography>
+                                    <div style={{ position: 'absolute', width: 'auto' }} className="mt-2 mx-3">
+                                        <DatePicker
+                                            dateFormat="DD-MM-YYYY"
+                                            timeFormat={false}
+                                            isValidDate={disPastDate}
+                                            value={selectedDate}
+                                            onChange={handleDateChange}
+                                            inputProps={{ readOnly: true }}
+                                            fullWidth
+                                        />
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Card sx={{ backgroundColor: 'rgb(250, 250, 250)', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '1em' }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        All Classes
+                                    </Typography>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="class-label"
+                                            value={selectedValue}
+                                            onChange={handleSelectChange}
+                                        >
+                                            <MenuItem value="All Classes">All Classes</MenuItem>
+                                            <MenuItem value="Second Sitting (2S)">Second Sitting (2S)</MenuItem>
+                                            <MenuItem value="AC 3 Tier (3A)">AC 3 Tier (3A)</MenuItem>
+                                            <MenuItem value="AC Chair car (CC)">AC Chair car (CC)</MenuItem>
+                                            <MenuItem value="Exec. Chair Car (EC)">Exec. Chair Car (EC)</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Card sx={{ backgroundColor: 'rgb(250, 250, 250)', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '1em' }}>
+                                <CardContent>
+                                    <Typography variant="h5" component="div">
+                                        Categories
+                                    </Typography>
+                                    <FormControl fullWidth>
+                                        <Select
+                                            labelId="category-label"
+                                            value={selectedValueCatagories}
+                                            onChange={handleSelectChangeONCatagories}
+                                        >
+                                            <MenuItem value="GENERAL">GENERAL</MenuItem>
+                                            <MenuItem value="LADIES">LADIES</MenuItem>
+                                            <MenuItem value="LOWER BERTH/SR.CITIZEN">LOWER BERTH/SR.CITIZEN</MenuItem>
+                                            <MenuItem value="PERSON WITH DISABILITY">PERSON WITH DISABILITY</MenuItem>
+                                            <MenuItem value="DUTY PASS">DUTY PASS</MenuItem>
+                                            <MenuItem value="TATKAL">TATKAL</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
+                </CardContent>
+            </div>
         </>
     )
 }

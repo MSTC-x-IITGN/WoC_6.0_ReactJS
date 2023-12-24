@@ -23,6 +23,7 @@ import trains from './AllTrainDetail';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import RemoveIcon from '@mui/icons-material/Remove';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 import { useState } from 'react';
 //
@@ -41,6 +42,13 @@ import {
 import { useFirebase } from '../Context/Firebase.jsx';
 import { useEffect } from 'react';
 import { useSearchTrain } from '../Context/SearchTrain.jsx';
+import { FormLabel } from 'react-bootstrap';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
+import '../CSS/TrainBox.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -64,6 +72,8 @@ function TrainBox(props) {
     }
 
     const [open, setOpen] = React.useState(false);
+    const [openAdded, setOpenAdded] = React.useState(false);
+    const [openRemoved, setOpenRemoved] = React.useState(false);
     const [myVisibility, setMyVisibility] = useState('');
 
     const firebase = useFirebase();
@@ -76,19 +86,14 @@ function TrainBox(props) {
 
     function getCurrentDateTime() {
         const now = new Date();
-
-        // Get hours, minutes, and seconds
         const hours = String(now.getHours()).padStart(2, '0');
         const minutes = String(now.getMinutes()).padStart(2, '0');
 
-        // Get day, month, and year
         const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const month = String(now.getMonth() + 1).padStart(2, '0');
         const year = now.getFullYear();
 
-        // Format the date and time
         const formattedDateTime = `${hours}:${minutes}, ${day}/${month}/${year}`;
-
         return formattedDateTime;
     }
 
@@ -101,6 +106,21 @@ function TrainBox(props) {
         setOpen(false);
     };
 
+    const handleCloseAdded = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenAdded(false);
+    };
+    const handleCloseRemoved = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenRemoved(false);
+    };
+
     const navigateToPayment = (e) => {
         e.preventDefault();
         addToBookList();
@@ -111,6 +131,7 @@ function TrainBox(props) {
 
     const addToBookList = () => {
 
+        setOpenAdded(true);
         const path = 'User/' + firebase.UserID + '/SearchList';
         const colRef = collection(db, path);
 
@@ -155,6 +176,7 @@ function TrainBox(props) {
 
     const removeFromBookList = () => {
 
+        setOpenRemoved(true);
         const path = 'User/' + firebase.UserID + '/SearchList';
         const colRef = collection(db, path);
 
@@ -215,178 +237,198 @@ function TrainBox(props) {
 
         return formattedDuration;
     }
-
+    useEffect(() => {
+        AOS.init({
+            duration: 600,
+            easing: 'ease-in-out',
+            once: true,
+        });
+    }, []);
 
     return (
         <>
-            <Card sx={{ maxWidth: "90%", backgroundColor: "#f5fffd" }} className="mx-auto mt-5">
-                <CardContent>
-                    <Box sx={{ flexGrow: 1 }}>
-                        <Grid container spacing={1}>
-                            <Grid item xs={4}>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    {row.TrainName}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                Runs on:
-                                <Box sx={{ display: 'inline-flex', gap: '2px', alignItems: 'center' }}>
-                                    {row.RunsOn.Monday ?
-                                        <Button sx={{ fontSize: '0.9rem', width: '0.1%' }}>
-                                            M
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            M
-                                        </Button>
-                                    } {row.RunsOn.Tuesday ?
-                                        <Button sx={{ fontSize: '0.9rem' }}>
-                                            T
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            T
-                                        </Button>
-                                    } {row.RunsOn.Wednesday ?
-                                        <Button sx={{ fontSize: '0.9rem' }}>
-                                            W
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            W
-                                        </Button>
-                                    } {row.RunsOn.Thursday ?
-                                        <Button sx={{ fontSize: '0.9rem' }}>
-                                            T
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            T
-                                        </Button>
-                                    } {row.RunsOn.Friday ?
-                                        <Button sx={{ fontSize: '0.9rem' }}>
-                                            F
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            F
-                                        </Button>
-                                    } {row.RunsOn.Saturday ?
-                                        <Button sx={{ fontSize: '0.9rem' }}>
-                                            S
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            S
-                                        </Button>
-                                    } {row.RunsOn.Sunday ?
-                                        <Button sx={{ fontSize: '0.9rem' }}>
-                                            S
-                                        </Button>
-                                        :
-                                        <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                            S
-                                        </Button>
-                                    }
-                                </Box>
-                            </Grid>
-                            <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                                <React.Fragment>
-                                    <Button variant="outlined" onClick={handleClickOpen}>
-                                        Train schedule
-                                    </Button>
-                                    <BootstrapDialog
-                                        onClose={handleClose}
-                                        aria-labelledby="customized-dialog-title"
-                                        open={open}
-                                    >
-                                        <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                            SCHEDULE
-                                        </DialogTitle>
-                                        <IconButton
-                                            aria-label="close"
-                                            onClick={handleClose}
-                                            sx={{
-                                                position: 'absolute',
-                                                right: 8,
-                                                top: 8,
-                                                color: (theme) => theme.palette.grey[500],
-                                            }}
-                                        >
-                                            <CloseIcon />
-                                        </IconButton>
-                                        <DialogContent dividers>
-                                            <TableOfSchedule data={row.Stations} />
-                                        </DialogContent>
-                                        <DialogActions>
-                                        </DialogActions>
-                                    </BootstrapDialog>
-                                </React.Fragment>
-
-                            </Grid>
-                        </Grid>
-                    </Box>
-                    <Typography sx={{ marginTop: 0.5 }} variant="h6" color="text.secondary">
+            <div data-aos="fade-up">
+                <Card sx={{
+                    padding: '1em',
+                    borderRadius: '1em',
+                    maxWidth: { xs: '100%', sm: '90%' },
+                    backgroundColor: 'rgb(245,245,245)',
+                    boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)',
+                    borderRadius: '2em',
+                    margin: 'auto',
+                    marginTop: 5
+                }}>
+                    <CardContent>
                         <Box sx={{ flexGrow: 1 }}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={4}>
-                                    {row.Stations[1].ArrivalTime} | {capitalize(FromText)} | {DateText}
+                            <Grid container spacing={1}>
+                                <Grid item xs={12} md={4}>
+                                    <Typography gutterBottom variant="h5" component="div">
+                                        {row.TrainName}
+                                    </Typography>
                                 </Grid>
-                                <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                    -- {calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime)} --
+                                <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'center' } }}>
+                                    Runs on:
+                                    <Box sx={{ display: 'inline-flex', gap: { xs: '2px', md: '8px' }, alignItems: 'center' }}>
+                                        {row.RunsOn.Monday ?
+                                            <Button sx={{ fontSize: '0.9rem', width: '0.1%' }}>
+                                                M
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                M
+                                            </Button>
+                                        } {row.RunsOn.Tuesday ?
+                                            <Button sx={{ fontSize: '0.9rem' }}>
+                                                T
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                T
+                                            </Button>
+                                        } {row.RunsOn.Wednesday ?
+                                            <Button sx={{ fontSize: '0.9rem' }}>
+                                                W
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                W
+                                            </Button>
+                                        } {row.RunsOn.Thursday ?
+                                            <Button sx={{ fontSize: '0.9rem' }}>
+                                                T
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                T
+                                            </Button>
+                                        } {row.RunsOn.Friday ?
+                                            <Button sx={{ fontSize: '0.9rem' }}>
+                                                F
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                F
+                                            </Button>
+                                        } {row.RunsOn.Saturday ?
+                                            <Button sx={{ fontSize: '0.9rem' }}>
+                                                S
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                S
+                                            </Button>
+                                        } {row.RunsOn.Sunday ?
+                                            <Button sx={{ fontSize: '0.9rem' }}>
+                                                S
+                                            </Button>
+                                            :
+                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                S
+                                            </Button>
+                                        }
+                                    </Box>
                                 </Grid>
-                                <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                                    {row.Stations[1].DepartureTime} | {capitalize(ToText)} | {DateText}
+                                <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'right', md: 'right' } }}>
+                                    <React.Fragment>
+                                        <Button variant="outlined" onClick={handleClickOpen}>
+                                            Train schedule
+                                        </Button>
+                                        <BootstrapDialog
+                                            onClose={handleClose}
+                                            aria-labelledby="customized-dialog-title"
+                                            open={open}
+                                        >
+                                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                                SCHEDULE
+                                            </DialogTitle>
+                                            <IconButton
+                                                aria-label="close"
+                                                onClick={handleClose}
+                                                sx={{
+                                                    position: 'absolute',
+                                                    right: 8,
+                                                    top: 8,
+                                                    color: (theme) => theme.palette.grey[500],
+                                                }}
+                                            >
+                                                <CloseIcon />
+                                            </IconButton>
+                                            <DialogContent dividers>
+                                                <TableOfSchedule data={row.Stations} />
+                                            </DialogContent>
+                                            <DialogActions>
+                                            </DialogActions>
+                                        </BootstrapDialog>
+                                    </React.Fragment>
+
                                 </Grid>
                             </Grid>
                         </Box>
-
-                    </Typography>
-                    <Box sx={{ flexGrow: 1, marginTop: 1 }} >
-                        <Grid container spacing={1}>
-                            {row.JourneyClass.AC3Tier ?
-                                <Grid item xs={1}>
-                                    <Button variant="outlined" size="large">
-                                        AC3 Tier
-                                    </Button>
-                                </Grid> :
-                                <Grid item xs={1}>
-                                    <Button variant="outlined" size="large">
-                                        Second Sitting
-                                    </Button>
+                        <Typography sx={{ marginTop: 0.5 }} variant="h6" color="text.secondary">
+                            <Box sx={{ flexGrow: 1 }}>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={4}>
+                                        {row.Stations[1].ArrivalTime} | {capitalize(FromText)} | {DateText}
+                                    </Grid>
+                                    <Grid item xs={4} sx={{ textAlign: 'center' }}>
+                                        <HorizontalRuleIcon />
+                                        {calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime)}
+                                        <HorizontalRuleIcon />
+                                    </Grid>
+                                    <Grid item xs={4} sx={{ textAlign: 'right' }}>
+                                        {row.Stations[1].DepartureTime} | {capitalize(ToText)} | {DateText}
+                                    </Grid>
                                 </Grid>
-                            }
-                            {row.JourneyClass.AcChairCar ?
-                                <Grid item xs={1}>
-                                    <Button variant="outlined" size="large">
-                                        AcChair Car
-                                    </Button>
-                                </Grid>
-                                :
-                                <Grid item xs={1}>
-                                    <Button variant="outlined" size="large">
-                                        Exec chair
-                                    </Button>
-                                </Grid>
-                            }
+                            </Box>
+                        </Typography>
+                        <Grid container spacing={1} sx={{ marginTop: { xs: 1, md: 2 } }}>
+                            <Grid item xs={12} md={1}> {/* Adjusted to full width on mobile */}
+                                <FormLabel variant="contained" size="small">
+                                    Discount on
+                                </FormLabel>
+                            </Grid>
                         </Grid>
-                    </Box>
-                </CardContent>
-                <CardActions>
-                    {row.isBooked ? (
-                        <Button onClick={removeFromBookList} variant="outlined" endIcon={<RemoveIcon />}>
-                            Remove from BookList
+                        <Button variant="outlined" size="large" className='mx-1' >
+                            {row.JourneyClass.AC3Tier ?
+                                "Second Sitting"
+                                :
+                                "AC3 Tier"
+                            }
                         </Button>
-                    ) : (
-                        <Button onClick={addToBookList} variant="outlined" endIcon={<AddIcon />}>
-                            Add to BookList
+                        <Button variant="outlined" size="large" className='mx-1' >
+                            {row.JourneyClass.AcChairCar ?
+                                "AcChair Car"
+                                :
+                                "Exec chair"
+                            }
                         </Button>
-                    )}
-                    <Button onClick={navigateToPayment} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
-                        Book
-                    </Button>
-                </CardActions>
-            </Card >
+                    </CardContent>
+                    <CardActions>
+                        {row.isBooked ? (
+                            <Button onClick={removeFromBookList} variant="outlined" endIcon={<RemoveIcon />}>
+                                Remove from BookList
+                            </Button>
+                        ) : (
+                            <Button onClick={addToBookList} variant="outlined" endIcon={<AddIcon />}>
+                                Add to BookList
+                            </Button>
+                        )}
+                        <Button onClick={navigateToPayment} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
+                            Book
+                        </Button>
+                        <Snackbar open={openAdded} autoHideDuration={4000} onClose={handleCloseAdded}>
+                            <Alert onClose={handleCloseAdded} severity="success" color='success' sx={{ width: '100%' }}>
+                                Added Successfully !!
+                            </Alert>
+                        </Snackbar>
+                        <Snackbar open={openRemoved} autoHideDuration={4000} onClose={handleCloseRemoved}>
+                            <Alert onClose={handleCloseRemoved} severity="success" color='success' sx={{ width: '100%' }}>
+                                Removed Successfully !!
+                            </Alert>
+                        </Snackbar>
+                    </CardActions>
+                </Card>
+            </div>
         </>
     )
 }
