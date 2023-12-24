@@ -181,7 +181,7 @@ function FromTo() {
                         width: '100%',
                         maxWidth: '38em',
                     }} variant="outlined">
-                        <Typography variant="h4" component="div" align="center" className="my-2 py-3">
+                        <Typography variant="h4" component="div" align="center" className="my-2 py-3" style={{ fontWeight: "600" }}>
                             Select Your Journey
                         </Typography>
                         <CardContent>

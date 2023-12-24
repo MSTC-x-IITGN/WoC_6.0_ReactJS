@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -23,10 +23,19 @@ import {
     MenuItem,
 } from '@mui/material';
 import '../CSS/Title.css';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function Title() {
+    useEffect(() => {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+    }, []);
     return (
-        <div className='my-title' style={{
+        <div data-aos="fade-up" className='my-title' style={{
             background: 'linear-gradient(to bottom, rgba(255, 255, 255), rgb(236, 236, 236))',
             borderBottomLeftRadius: ['0em', '16em', '32em'],
             borderBottomRightRadius: ['0em', '16em', '32em'],

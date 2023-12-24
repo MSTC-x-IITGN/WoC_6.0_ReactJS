@@ -31,6 +31,8 @@ import {
     Select,
     MenuItem,
 } from '@mui/material';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 function Profile() {
 
@@ -189,9 +191,16 @@ function Profile() {
         },
     });
 
+    useEffect(() => {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+        });
+    }, []);
     return (
         <>
-            <div style={{ margin: '2em', fontFamily: 'Quicksand', fontWeight: '600' }}>
+            <div data-aos="fade-up" style={{ margin: '2em', fontFamily: 'Quicksand', fontWeight: '600' }}>
                 <ThemeProvider theme={theme}>
                     <Grid container spacing={3} justifyContent="center">
                         <Grid item xs={12} sm={6} md={6} lg={4} xl={4} >
