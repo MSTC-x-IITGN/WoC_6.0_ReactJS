@@ -78,8 +78,6 @@ class Trie {
 function FromTo() {
 
     const SerachTrain = useSearchTrain();
-
-
     const [FromText, setFromText] = useState('');
     const [ToText, setToText] = useState('');
     const [suggestionsFrom, setSuggestionsFrom] = useState([]);
@@ -174,15 +172,16 @@ function FromTo() {
         <div data-aos="fade-up">
             <ThemeProvider theme={theme}>
                 <Container className="pt-5 pb-3 d-flex justify-content-center align-items-center my-5">
-                    <Card style={{
-                        backgroundColor: 'rgb(252, 252, 252)',
-                        boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)',
-                        borderRadius: '2em',
+                    <Card elevation={0} style={{
+                        // backgroundColor: 'rgb(252, 252, 252)',
+                        // boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)',
+                        // borderRadius: '2em',
+                        border: 'none',
                         width: '100%',
                         maxWidth: '38em',
                     }} variant="outlined">
                         <Typography variant="h4" component="div" align="center" className="my-2 py-3" style={{ fontWeight: "600" }}>
-                            Select Your Journey
+                            Start Your Journey
                         </Typography>
                         <CardContent>
                             <div className="mb-3 input-group-lg">
@@ -197,13 +196,14 @@ function FromTo() {
                                     onChange={changingFromText}
                                     variant="outlined"
                                     fullWidth
+                                    autoComplete="off"
                                 />
                                 <List>
                                     {FromText !== '' &&
                                         suggestionsFrom.map((suggestion, index) => (
                                             <ListItem
                                                 key={index}
-                                                style={{ marginBottom: '0.4em', backgroundColor: 'rgb(240,240,240)', borderRadius: '0.5em' }}
+                                                style={{ marginBottom: '0.4em', backgroundColor: '#edf2f4', borderRadius: '0.5em' }}
                                                 onClick={() => selectThisFromCity(suggestion)}
                                             >
                                                 <ListItemText>
@@ -223,10 +223,10 @@ function FromTo() {
                                     width: 'auto',
                                     height: 'auto',
                                     borderRadius: '2em',
-                                    backgroundColor: 'rgb(244,244,244)',
+                                    backgroundColor: '#134074',
                                     color: 'black'
                                 }}>
-                                    <SwapVertIcon style={{ fontSize: '40px' }} />
+                                    <SwapVertIcon style={{ fontSize: '40px', color: 'white' }} />
                                 </Button>
                             </div>
                             <div className="mb-3 input-group-lg">
@@ -241,6 +241,7 @@ function FromTo() {
                                     onChange={changingToText}
                                     variant="outlined"
                                     fullWidth
+                                    autoComplete="off"
                                 />
                                 <List>
                                     {ToText !== '' &&

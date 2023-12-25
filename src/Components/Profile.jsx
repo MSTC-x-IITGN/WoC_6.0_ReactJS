@@ -401,7 +401,7 @@ function Profile() {
                                         </Grid>
                                     </Grid>
                                     <div style={{ textAlign: 'center', marginTop: '1em' }}>
-                                        <Button variant="contained" color="success" onClick={UpdateProfile} style={{ marginTop: '1em' }} sx={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}>UPDATE</Button>
+                                        <Button variant="contained" color="success" onClick={UpdateProfile} style={{ marginTop: '1em', backgroundColor: '#2A386B' }} sx={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}>UPDATE</Button>
                                     </div>
                                 </CardContent>
                             </Card>

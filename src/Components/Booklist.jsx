@@ -222,157 +222,118 @@ function Booklist() {
                                                     </Typography>
                                                 </AccordionSummary>
                                                 <AccordionDetails>
-                                                    <Typography>
-                                                        <Box sx={{ flexGrow: 1 }} style={{ border: '2px solid black', padding: "2em", borderRadius: "2em" }}>
+                                                    <Box sx={{ flexGrow: 1 }} style={{ border: '2px solid black', padding: "2em", borderRadius: "2em" }}>
+                                                        <Grid container spacing={2} style={{ display: 'flex', }}>
+                                                            <Grid container spacing={2} style={{ flex: '1' }}>
+                                                                <Grid item xs={6}>
+                                                                    Train Name
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; {row.TrainName}
+                                                                </Grid>
+                                                            </Grid>
                                                             <Grid container spacing={2}>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            Train Name :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.TrainName}
-                                                                        </Grid>
-                                                                    </Grid>
+                                                                <Grid item xs={6} >
+                                                                    From
                                                                 </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4} >
-                                                                            From :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.SearchFromText}
-                                                                        </Grid>
-                                                                    </Grid>
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            To :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.SearchToText}
-                                                                        </Grid>
-                                                                    </Grid>
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            Catagory :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.SearchCatagories}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            Date :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.SearchDateText}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            AllClasses :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.SearchAllClasses}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            TrainNumber :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.TrainNumber}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            AcChairCar :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.JourneyClass.AcChairCar ? 'Yes' : 'No'}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            AC3Tier :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.JourneyClass.AC3Tier ? 'Yes' : 'No'}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            ExecChairCar :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.JourneyClass.ExecChairCar ? 'Yes' : 'No'}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            SecondSitting :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            {row.JourneyClass.SecondSitting ? 'Yes' : 'No'}
-                                                                        </Grid>
-                                                                    </Grid>
-
-                                                                </Grid>
-                                                                <Grid item xs={8}>
-                                                                    <Grid container spacing={2}>
-                                                                        <Grid item xs={4}>
-                                                                            Price :
-                                                                        </Grid>
-                                                                        <Grid item xs={4}>
-                                                                            100Rs.
-                                                                        </Grid>
-                                                                    </Grid>
-
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; {row.SearchFromText}
                                                                 </Grid>
                                                             </Grid>
-                                                            <Grid container spacing={2} className='mt-4' alignItems="center" justifyContent="center" >
-                                                                <Grid item xs={10}>
-                                                                    <Button onClick={() => { handleEvent(row) }} variant="contained" color={!row.SearchIsPaid ? 'info' : 'error'} endIcon={!row.SearchIsPaid ? <PaymentIcon /> : <CancelIcon />}>
-                                                                        {!row.SearchIsPaid ? 'PAY NOW' : 'Cancel Ticket'}
-                                                                    </Button>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    To
                                                                 </Grid>
-                                                                <Grid item xs={2}>
-                                                                    <Button onClick={() => { removeFromBookList(row) }}
-                                                                        variant="outlined"
-                                                                        color='inherit'
-                                                                        style={{ display: !row.SearchIsPaid ? 'block' : 'none' }}
-                                                                    >
-                                                                        Remove Item <RemoveIcon />
-                                                                    </Button>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; {row.SearchToText}
                                                                 </Grid>
                                                             </Grid>
-                                                        </Box>
-                                                    </Typography>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    Catagory
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp;   {row.SearchCatagories}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    Date
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp;  {row.SearchDateText}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    AllClasses
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp;  {row.SearchAllClasses}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    TrainNumber
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp;   {row.TrainNumber}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    AcChairCar
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; {row.JourneyClass.AcChairCar ? 'Yes' : 'No'}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    AC3Tier
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; {row.JourneyClass.AC3Tier ? 'Yes' : 'No'}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    ExecChairCar
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp;  {row.JourneyClass.ExecChairCar ? 'Yes' : 'No'}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    SecondSitting
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; {row.JourneyClass.SecondSitting ? 'Yes' : 'No'}
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2}>
+                                                                <Grid item xs={6}>
+                                                                    Price
+                                                                </Grid>
+                                                                <Grid item xs={6}>
+                                                                    : &nbsp; 100Rs.
+                                                                </Grid>
+                                                            </Grid>
+                                                            <Grid container spacing={2} className='mt-4 mx-1' alignItems="center" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                                <Button onClick={() => { handleEvent(row) }} variant="contained" style={{ backgroundColor: !row.SearchIsPaid ? '#2A386B' : 'crimson' }} endIcon={!row.SearchIsPaid ? <PaymentIcon /> : <CancelIcon />}>
+                                                                    {!row.SearchIsPaid ? 'PAY NOW' : 'Cancel Ticket'}
+                                                                </Button>
+                                                                <Button onClick={() => { removeFromBookList(row) }}
+                                                                    variant="outlined"
+                                                                    color='inherit'
+                                                                    style={{ display: !row.SearchIsPaid ? 'block' : 'none' }}
+                                                                >
+                                                                    Remove Item <RemoveIcon />
+                                                                </Button>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Box>
                                                 </AccordionDetails>
                                             </Accordion>
                                         </Grid>
@@ -383,6 +344,15 @@ function Booklist() {
 
                     }
                 </ThemeProvider>
+            </div >
+            <div className='mt-5'>
+                &nbsp;
+            </div>
+            <div className='mt-5'>
+                &nbsp;
+            </div>
+            <div className='mt-5'>
+                &nbsp;
             </div>
         </>
     )

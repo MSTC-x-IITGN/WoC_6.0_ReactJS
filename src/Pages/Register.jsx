@@ -13,9 +13,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
+
+import BackgroundVideo from '../Context/backgroundVideo';
 
 import { useFirebase } from '../Context/Firebase';
 import Alert from 'react-bootstrap/Alert';
@@ -63,9 +65,9 @@ export default function RegisterPage() {
             setValidPassword(true);
         }
     }
-
     return (
         <div className='my-glass-effect'>
+         <BackgroundVideo/>
             <ThemeProvider theme={defaultTheme}>
                 <Container component="main" maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
                     <CssBaseline />
@@ -81,7 +83,7 @@ export default function RegisterPage() {
                             height: 'auto'
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                        <Avatar sx={{ m: 1 }} style={{ backgroundColor: '#25396F' }}>
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5" sx={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}>
@@ -97,12 +99,13 @@ export default function RegisterPage() {
                                     fullWidth
                                     label="Email Address"
                                     name="email"
-                                    autoComplete="email"
+                                    // autoComplete="email"
                                     autoFocus
-                                    color='secondary'
+
                                     onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
                                     value={email}
-                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold', color: '#25396F' } }}
+                                    autoComplete="off"
                                 />
                             ) : (
                                 <TextField
@@ -115,12 +118,13 @@ export default function RegisterPage() {
                                     fullWidth
                                     label="Email Address"
                                     name="email"
-                                    autoComplete="email"
+                                    // autoComplete="email"
                                     autoFocus
                                     color='secondary'
                                     onChange={(e) => { setEmailcheck(true); setEmail(e.target.value); }}
                                     value={email}
                                     InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                    autoComplete="off"
                                 />
                             )}
                             {validPassword ? (
@@ -133,11 +137,11 @@ export default function RegisterPage() {
                                     name="password"
                                     label="Password"
                                     type="password"
-                                    color='secondary'
-                                    autoComplete="current-password"
+                                    // autoComplete="current-password"
                                     onChange={handlePasswordofLogin}
                                     value={password}
-                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                    InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold', color: '#25396F' } }}
+                                    autoComplete="off"
                                 />
                             ) : (
                                 <TextField
@@ -152,10 +156,11 @@ export default function RegisterPage() {
                                     label="Password"
                                     type="password"
                                     color='secondary'
-                                    autoComplete="current-password"
+                                    // autoComplete="current-password"
                                     onChange={handlePasswordofLogin}
                                     value={password}
                                     InputProps={{ style: { fontFamily: 'Quicksand', fontWeight: 'bold' } }}
+                                    autoComplete="off"
                                 />
                             )}
                             <Button
@@ -164,7 +169,7 @@ export default function RegisterPage() {
                                 variant="contained"
                                 color='secondary'
                                 sx={{ mt: 3, mb: 2 }}
-                                style={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}
+                                style={{ fontFamily: 'Quicksand', fontWeight: 'bold', backgroundColor: '#25396F' }}
                             >
                                 Sign Up
                             </Button>

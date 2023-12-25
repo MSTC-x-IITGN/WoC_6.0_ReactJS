@@ -99,7 +99,9 @@ export default function Searching() {
                     style={{
                         fontFamily: 'Quicksand',
                         fontWeight: 'bold',
-                        fontSize: 'large'
+                        fontSize: 'large',
+                        backgroundColor: '#2A386B',
+                        color: 'white'
                     }}
 
                     variant="contained"

@@ -12,6 +12,7 @@ import {
     onSnapshot
 } from 'firebase/firestore';
 import '../CSS/Homepage.css';
+import ExtraInfo from './ExtraInfo.jsx';
 
 function Homepage() {
 
@@ -41,6 +42,7 @@ function Homepage() {
                 <FromTo />
                 <Filters />
                 <Searching />
+                <ExtraInfo />
             </div>
         </>
     )

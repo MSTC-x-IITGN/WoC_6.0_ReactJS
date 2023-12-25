@@ -5,6 +5,8 @@ import "react-datetime/css/react-datetime.css";
 import { useSearchTrain } from "../Context/SearchTrain";
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import {
     Card,
     CardContent,
@@ -57,78 +59,90 @@ function Filters() {
             once: true,
         });
     }, []);
+
+    const theme = createTheme({
+        typography: {
+            fontFamily: 'Quicksand',
+            body1: {
+                fontWeight: '600',
+                fontSize: 'large',
+            },
+        },
+    });
     return (
         <>
             <div data-aos="fade-up">
-                <CardContent>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
-                            <Card sx={{ height: '8em', backgroundColor: 'rgb(250, 250, 250)', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '1em' }}>
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        Date :
-                                    </Typography>
-                                    <div style={{ position: 'absolute', width: 'auto' }} className="mt-2 mx-3">
-                                        <DatePicker
-                                            dateFormat="DD-MM-YYYY"
-                                            timeFormat={false}
-                                            isValidDate={disPastDate}
-                                            value={selectedDate}
-                                            onChange={handleDateChange}
-                                            inputProps={{ readOnly: true }}
-                                            fullWidth
-                                        />
-                                    </div>
-                                </CardContent>
-                            </Card>
+                <ThemeProvider theme={theme}>
+                    <CardContent>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} md={4}>
+                                <Card style={{ border: '2px solid rgba(2, 62, 138, 1)' }} sx={{ height: '8em', backgroundColor: 'white', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '0.5em' }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div" style={{ fontWeight: 'bold' }}>
+                                            Date
+                                        </Typography>
+                                        <div style={{ position: 'absolute', width: 'auto' }} className="mt-2 mx-3">
+                                            <DatePicker
+                                                dateFormat="DD-MM-YYYY"
+                                                timeFormat={false}
+                                                isValidDate={disPastDate}
+                                                value={selectedDate}
+                                                onChange={handleDateChange}
+                                                inputProps={{ readOnly: true }}
+                                                fullWidth
+                                            />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <Card style={{ border: '2px solid #023e8a' }} sx={{ backgroundColor: 'white', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '0.5em' }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div" style={{ fontWeight: 'bold' }}>
+                                            All Classes
+                                        </Typography>
+                                        <FormControl fullWidth>
+                                            <Select
+                                                labelId="class-label"
+                                                value={selectedValue}
+                                                onChange={handleSelectChange}
+                                            >
+                                                <MenuItem value="All Classes">All Classes</MenuItem>
+                                                <MenuItem value="Second Sitting (2S)">Second Sitting (2S)</MenuItem>
+                                                <MenuItem value="AC 3 Tier (3A)">AC 3 Tier (3A)</MenuItem>
+                                                <MenuItem value="AC Chair car (CC)">AC Chair car (CC)</MenuItem>
+                                                <MenuItem value="Exec. Chair Car (EC)">Exec. Chair Car (EC)</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid item xs={12} md={4}>
+                                <Card style={{ border: '2px solid #023e8a' }} sx={{ backgroundColor: 'white', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '0.5em' }}>
+                                    <CardContent>
+                                        <Typography variant="h5" component="div" style={{ fontWeight: 'bold' }}>
+                                            Categories
+                                        </Typography>
+                                        <FormControl fullWidth>
+                                            <Select
+                                                labelId="category-label"
+                                                value={selectedValueCatagories}
+                                                onChange={handleSelectChangeONCatagories}
+                                            >
+                                                <MenuItem value="GENERAL">GENERAL</MenuItem>
+                                                <MenuItem value="LADIES">LADIES</MenuItem>
+                                                <MenuItem value="LOWER BERTH/SR.CITIZEN">LOWER BERTH/SR.CITIZEN</MenuItem>
+                                                <MenuItem value="PERSON WITH DISABILITY">PERSON WITH DISABILITY</MenuItem>
+                                                <MenuItem value="DUTY PASS">DUTY PASS</MenuItem>
+                                                <MenuItem value="TATKAL">TATKAL</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Card sx={{ backgroundColor: 'rgb(250, 250, 250)', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '1em' }}>
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        All Classes
-                                    </Typography>
-                                    <FormControl fullWidth>
-                                        <Select
-                                            labelId="class-label"
-                                            value={selectedValue}
-                                            onChange={handleSelectChange}
-                                        >
-                                            <MenuItem value="All Classes">All Classes</MenuItem>
-                                            <MenuItem value="Second Sitting (2S)">Second Sitting (2S)</MenuItem>
-                                            <MenuItem value="AC 3 Tier (3A)">AC 3 Tier (3A)</MenuItem>
-                                            <MenuItem value="AC Chair car (CC)">AC Chair car (CC)</MenuItem>
-                                            <MenuItem value="Exec. Chair Car (EC)">Exec. Chair Car (EC)</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                        <Grid item xs={12} md={4}>
-                            <Card sx={{ backgroundColor: 'rgb(250, 250, 250)', boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)', borderRadius: '1em' }}>
-                                <CardContent>
-                                    <Typography variant="h5" component="div">
-                                        Categories
-                                    </Typography>
-                                    <FormControl fullWidth>
-                                        <Select
-                                            labelId="category-label"
-                                            value={selectedValueCatagories}
-                                            onChange={handleSelectChangeONCatagories}
-                                        >
-                                            <MenuItem value="GENERAL">GENERAL</MenuItem>
-                                            <MenuItem value="LADIES">LADIES</MenuItem>
-                                            <MenuItem value="LOWER BERTH/SR.CITIZEN">LOWER BERTH/SR.CITIZEN</MenuItem>
-                                            <MenuItem value="PERSON WITH DISABILITY">PERSON WITH DISABILITY</MenuItem>
-                                            <MenuItem value="DUTY PASS">DUTY PASS</MenuItem>
-                                            <MenuItem value="TATKAL">TATKAL</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    </Grid>
-                </CardContent>
+                    </CardContent>
+                </ThemeProvider>
             </div>
         </>
     )

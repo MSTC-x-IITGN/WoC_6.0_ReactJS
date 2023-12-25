@@ -49,6 +49,8 @@ import Alert from '@mui/material/Alert';
 import '../CSS/TrainBox.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -245,190 +247,201 @@ function TrainBox(props) {
         });
     }, []);
 
+    const theme = createTheme({
+        typography: {
+            fontFamily: 'Quicksand',
+            body1: {
+                fontWeight: 'bold',
+                fontSize: 'large',
+            },
+        },
+    });
+
     return (
         <>
             <div data-aos="fade-up">
-                <Card sx={{
-                    padding: '1em',
-                    borderRadius: '1em',
-                    maxWidth: { xs: '100%', sm: '90%' },
-                    backgroundColor: 'rgb(245,245,245)',
-                    boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)',
-                    borderRadius: '2em',
-                    margin: 'auto',
-                    marginTop: 5
-                }}>
-                    <CardContent>
-                        <Box sx={{ flexGrow: 1 }}>
-                            <Grid container spacing={1}>
-                                <Grid item xs={12} md={4}>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {row.TrainName}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'center' } }}>
-                                    Runs on:
-                                    <Box sx={{ display: 'inline-flex', gap: { xs: '2px', md: '8px' }, alignItems: 'center' }}>
-                                        {row.RunsOn.Monday ?
-                                            <Button sx={{ fontSize: '0.9rem', width: '0.1%' }}>
-                                                M
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                M
-                                            </Button>
-                                        } {row.RunsOn.Tuesday ?
-                                            <Button sx={{ fontSize: '0.9rem' }}>
-                                                T
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                T
-                                            </Button>
-                                        } {row.RunsOn.Wednesday ?
-                                            <Button sx={{ fontSize: '0.9rem' }}>
-                                                W
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                W
-                                            </Button>
-                                        } {row.RunsOn.Thursday ?
-                                            <Button sx={{ fontSize: '0.9rem' }}>
-                                                T
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                T
-                                            </Button>
-                                        } {row.RunsOn.Friday ?
-                                            <Button sx={{ fontSize: '0.9rem' }}>
-                                                F
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                F
-                                            </Button>
-                                        } {row.RunsOn.Saturday ?
-                                            <Button sx={{ fontSize: '0.9rem' }}>
-                                                S
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                S
-                                            </Button>
-                                        } {row.RunsOn.Sunday ?
-                                            <Button sx={{ fontSize: '0.9rem' }}>
-                                                S
-                                            </Button>
-                                            :
-                                            <Button sx={{ fontSize: '0.9rem' }} disabled>
-                                                S
-                                            </Button>
-                                        }
-                                    </Box>
-                                </Grid>
-                                <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'right', md: 'right' } }}>
-                                    <React.Fragment>
-                                        <Button variant="outlined" onClick={handleClickOpen}>
-                                            Train schedule
-                                        </Button>
-                                        <BootstrapDialog
-                                            onClose={handleClose}
-                                            aria-labelledby="customized-dialog-title"
-                                            open={open}
-                                        >
-                                            <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                                                SCHEDULE
-                                            </DialogTitle>
-                                            <IconButton
-                                                aria-label="close"
-                                                onClick={handleClose}
-                                                sx={{
-                                                    position: 'absolute',
-                                                    right: 8,
-                                                    top: 8,
-                                                    color: (theme) => theme.palette.grey[500],
-                                                }}
-                                            >
-                                                <CloseIcon />
-                                            </IconButton>
-                                            <DialogContent dividers>
-                                                <TableOfSchedule data={row.Stations} />
-                                            </DialogContent>
-                                            <DialogActions>
-                                            </DialogActions>
-                                        </BootstrapDialog>
-                                    </React.Fragment>
-
-                                </Grid>
-                            </Grid>
-                        </Box>
-                        <Typography sx={{ marginTop: 0.5 }} variant="h6" color="text.secondary">
+                <ThemeProvider theme={theme}>
+                    <Card sx={{
+                        padding: '1em',
+                        borderRadius: '1em',
+                        maxWidth: { xs: '100%', sm: '90%' },
+                        backgroundColor: '#e3f2fd',
+                        boxShadow: '4px 4px 4px rgba(60, 60, 60, 0.1)',
+                        margin: 'auto',
+                        marginTop: 5
+                    }}>
+                        <CardContent>
                             <Box sx={{ flexGrow: 1 }}>
-                                <Grid container spacing={2}>
-                                    <Grid item xs={4}>
-                                        {row.Stations[1].ArrivalTime} | {capitalize(FromText)} | {DateText}
+                                <Grid container spacing={1}>
+                                    <Grid item xs={12} md={4}>
+                                        <Typography style={{ fontWeight: 'bold' }} gutterBottom variant="h5" component="div">
+                                            {row.TrainName}
+                                        </Typography>
                                     </Grid>
-                                    <Grid item xs={4} sx={{ textAlign: 'center' }}>
-                                        <HorizontalRuleIcon />
-                                        {calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime)}
-                                        <HorizontalRuleIcon />
+                                    <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'center', md: 'center' } }}>
+                                        Runs on:
+                                        <Box sx={{ display: 'inline-flex', gap: { xs: '2px', md: '8px' }, alignItems: 'center' }}>
+                                            {row.RunsOn.Monday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem', width: '0.1%' }}>
+                                                    M
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    M
+                                                </Button>
+                                            } {row.RunsOn.Tuesday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem' }}>
+                                                    T
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    T
+                                                </Button>
+                                            } {row.RunsOn.Wednesday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem' }}>
+                                                    W
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    W
+                                                </Button>
+                                            } {row.RunsOn.Thursday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem' }}>
+                                                    T
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    T
+                                                </Button>
+                                            } {row.RunsOn.Friday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem' }}>
+                                                    F
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    F
+                                                </Button>
+                                            } {row.RunsOn.Saturday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem' }}>
+                                                    S
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    S
+                                                </Button>
+                                            } {row.RunsOn.Sunday ?
+                                                <Button style={{ fontWeight: 'bold' }} sx={{ fontSize: '0.9rem' }}>
+                                                    S
+                                                </Button>
+                                                :
+                                                <Button sx={{ fontSize: '0.9rem' }} disabled>
+                                                    S
+                                                </Button>
+                                            }
+                                        </Box>
                                     </Grid>
-                                    <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                                        {row.Stations[1].DepartureTime} | {capitalize(ToText)} | {DateText}
+                                    <Grid item xs={12} md={4} sx={{ textAlign: { xs: 'right', md: 'right' } }}>
+                                        <React.Fragment>
+                                            <Button style={{ fontWeight: 'bold' }} variant="outlined" onClick={handleClickOpen}>
+                                                Train schedule
+                                            </Button>
+                                            <BootstrapDialog
+                                                onClose={handleClose}
+                                                aria-labelledby="customized-dialog-title"
+                                                open={open}
+                                            >
+                                                <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
+                                                    SCHEDULE
+                                                </DialogTitle>
+                                                <IconButton
+                                                    aria-label="close"
+                                                    onClick={handleClose}
+                                                    sx={{
+                                                        position: 'absolute',
+                                                        right: 8,
+                                                        top: 8,
+                                                        color: (theme) => theme.palette.grey[500],
+                                                    }}
+                                                >
+                                                    <CloseIcon />
+                                                </IconButton>
+                                                <DialogContent dividers>
+                                                    <TableOfSchedule data={row.Stations} />
+                                                </DialogContent>
+                                                <DialogActions>
+                                                </DialogActions>
+                                            </BootstrapDialog>
+                                        </React.Fragment>
+
                                     </Grid>
                                 </Grid>
                             </Box>
-                        </Typography>
-                        <Grid container spacing={1} sx={{ marginTop: { xs: 1, md: 2 } }}>
-                            <Grid item xs={12} md={1}> {/* Adjusted to full width on mobile */}
-                                <FormLabel variant="contained" size="small">
-                                    Discount on
-                                </FormLabel>
+                            <Typography sx={{ marginTop: 0.5 }} variant="h6" color="text.secondary">
+                                <Box sx={{ flexGrow: 1 }}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={4} style={{ fontWeight: 'bold' }}>
+                                            {row.Stations[1].ArrivalTime} | {capitalize(FromText)} | {DateText}
+                                        </Grid>
+                                        <Grid item xs={4} sx={{ textAlign: 'center' }} style={{ fontWeight: '600' }}>
+                                            <HorizontalRuleIcon />
+                                            {calculateTimeDuration(row.Stations[1].ArrivalTime, row.Stations[5].DepartureTime)}
+                                            <HorizontalRuleIcon />
+                                        </Grid>
+                                        <Grid item xs={4} sx={{ textAlign: 'right' }} style={{ fontWeight: 'bold' }}>
+                                            {row.Stations[1].DepartureTime} | {capitalize(ToText)} | {DateText}
+                                        </Grid>
+                                    </Grid>
+                                </Box>
+                            </Typography>
+                            <Grid container spacing={1} sx={{ marginTop: { xs: 1, md: 2 } }}>
+                                <Grid item xs={12} md={1}> {/* Adjusted to full width on mobile */}
+                                    <FormLabel variant="contained" size="small">
+                                        Discount on
+                                    </FormLabel>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Button variant="outlined" size="large" className='mx-1' >
-                            {row.JourneyClass.AC3Tier ?
-                                "Second Sitting"
-                                :
-                                "AC3 Tier"
-                            }
-                        </Button>
-                        <Button variant="outlined" size="large" className='mx-1' >
-                            {row.JourneyClass.AcChairCar ?
-                                "AcChair Car"
-                                :
-                                "Exec chair"
-                            }
-                        </Button>
-                    </CardContent>
-                    <CardActions>
-                        {row.isBooked ? (
-                            <Button onClick={removeFromBookList} variant="outlined" endIcon={<RemoveIcon />}>
-                                Remove from BookList
+                            <Button variant="outlined" size="large" className='mx-1' >
+                                {row.JourneyClass.AC3Tier ?
+                                    "2S"
+                                    :
+                                    "AC3"
+                                }
                             </Button>
-                        ) : (
-                            <Button onClick={addToBookList} variant="outlined" endIcon={<AddIcon />}>
-                                Add to BookList
+                            <Button variant="outlined" size="large" className='mx-1' >
+                                {row.JourneyClass.AcChairCar ?
+                                    "AcCC"
+                                    :
+                                    "ExC"
+                                }
                             </Button>
-                        )}
-                        <Button onClick={navigateToPayment} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
-                            Book
-                        </Button>
-                        <Snackbar open={openAdded} autoHideDuration={4000} onClose={handleCloseAdded}>
-                            <Alert onClose={handleCloseAdded} severity="success" color='success' sx={{ width: '100%' }}>
-                                Added Successfully !!
-                            </Alert>
-                        </Snackbar>
-                        <Snackbar open={openRemoved} autoHideDuration={4000} onClose={handleCloseRemoved}>
-                            <Alert onClose={handleCloseRemoved} severity="success" color='success' sx={{ width: '100%' }}>
-                                Removed Successfully !!
-                            </Alert>
-                        </Snackbar>
-                    </CardActions>
-                </Card>
-            </div>
+                        </CardContent>
+                        <CardActions>
+                            {row.isBooked ? (
+                                <Button style={{ fontWeight: 'bold' }} onClick={removeFromBookList} variant="outlined" endIcon={<RemoveIcon />} >
+                                    Remove from BookList
+                                </Button>
+                            ) : (
+                                <Button style={{ fontWeight: 'bold' }} onClick={addToBookList} variant="outlined" endIcon={<AddIcon />}>
+                                    Add to BookList
+                                </Button>
+                            )}
+                            <Button style={{ fontWeight: 'bold' }} onClick={navigateToPayment} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
+                                Book
+                            </Button>
+                            {/* <Snackbar open={openAdded} autoHideDuration={4000} onClose={handleCloseAdded}>
+                                <Alert onClose={handleCloseAdded} severity="success" color='success' sx={{ width: '100%' }}>
+                                    Added Successfully !!
+                                </Alert>
+                            </Snackbar>
+                            <Snackbar open={openRemoved} autoHideDuration={4000} onClose={handleCloseRemoved}>
+                                <Alert onClose={handleCloseRemoved} severity="success" color='success' sx={{ width: '100%' }}>
+                                    Removed Successfully !!
+                                </Alert>
+                            </Snackbar> */}
+                        </CardActions>
+                    </Card>
+                </ThemeProvider>
+            </div >
         </>
     )
 }

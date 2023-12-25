@@ -8,6 +8,7 @@ import Booklist from './Components/Booklist.jsx';
 import Temp from './Components/temp.jsx';
 import CancelTicket from './Components/CancelTicket.jsx';
 import Mystery from './Components/Mystery.jsx';
+import AboutUS from './Components/AboutUS.jsx';
 
 //Pages
 import RegisterPage from './Pages/Register.jsx';
@@ -50,6 +51,7 @@ function App() {
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/payment" element={<Payment />} />
                 <Route exact path="/booklist" element={<Booklist />} />
+                <Route exact path="/about" element={<AboutUS />} />
                 <Route exact path="/temp" element={<Temp />} />
                 <Route exact path="/cancelticket" element={<CancelTicket />} />
                 <Route exact path="/mystery" element={<Mystery />} />
