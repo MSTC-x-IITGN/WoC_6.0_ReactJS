@@ -23,7 +23,7 @@ function NavBar() {
         <nav className=" navbar navbar-expand-lg p-2" style={navbarStyle}>
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/home" style={{ color: 'white', fontWeight: 'bold', fontSize: 'x-large' }}>
-                    YATRA
+                    એ હાલો ...
                 </Link>
                 <button
                     className="navbar-toggler"

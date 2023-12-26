@@ -58,7 +58,7 @@ export default function RegisterPage() {
         if (firebase.isLoggedIn) {
             navigate("/");
         }
-    }, [firebase.isLoggedIn]);
+    }, [firebase.isLoggedIn, navigate]);
 
     const handlePasswordofLogin = (e) => {
         const input = e.target.value;
@@ -178,7 +178,7 @@ export default function RegisterPage() {
                                 sx={{ mt: 3, mb: 2 }}
                                 style={{ fontFamily: 'Quicksand', fontWeight: 'bold', backgroundColor: '#25396F' }}
                             >
-                                {!loading ? 'Sign Up' : 'Signing Up....'}
+                                {!firebase.regLoader ? 'Sign Up' : 'Signing Up....'}
                             </Button>
                             <Grid container>
                                 <Grid item xs={12}>

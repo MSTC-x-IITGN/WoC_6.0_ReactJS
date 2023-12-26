@@ -62,6 +62,7 @@ export const FirebaseProvider = (props) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [UserID, setUserID] = useState('');
     const [RegisteringPR, setRegisteringPR] = useState(false);
+    const [regLoader, setRegLoader] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
@@ -73,6 +74,7 @@ export const FirebaseProvider = (props) => {
     }, [firebaseAuth]);
 
     const signupWithEmailAndPassword = (email, password) => {
+        setRegLoader(true);
         createUserWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
             // console.log('user Register in:', cred.user.email);
             setIsLoggedIn(true);
@@ -98,7 +100,14 @@ export const FirebaseProvider = (props) => {
                 .then(() => {
                     // console.log('added');
                     setRegisteringPR(false);
+                    setRegLoader(false);
+
                 })
+                .catch((err) => {
+                    // console.log(err.message);
+                    setRegLoader(false);
+
+                });
 
         })
             .catch((err) => {
@@ -163,7 +172,8 @@ export const FirebaseProvider = (props) => {
                 isLoggedIn,
                 UserID,
                 setUserID,
-                RegisteringPR
+                RegisteringPR,
+                regLoader
             }}>
             {props.children}
         </FirebaseContext.Provider>
