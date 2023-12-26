@@ -149,10 +149,10 @@ const PaymentForm = () => {
                     ...myListOfBook
                 })
                     .then(() => {
-                        console.log('Booked..');
+                        // console.log('Booked..');
                     })
                     .catch((error) => {
-                        console.error('Error booked : ', error);
+                        // console.error('Error booked : ', error);
                     });
             });
 
@@ -220,6 +220,7 @@ const PaymentForm = () => {
                             fullWidth
                             value={cardNumberDisplay}
                             onChange={handleCardNumberChange}
+                            autoComplete='off'
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -233,6 +234,7 @@ const PaymentForm = () => {
                                     placeholder="MM"
                                     value={month}
                                     onChange={handleMonthChange}
+                                    autoComplete='off'
                                 />
                             </Grid>
                             <Grid item xs={6}>
@@ -244,6 +246,7 @@ const PaymentForm = () => {
                                     placeholder="YY"
                                     value={year}
                                     onChange={handleYearChange}
+                                    autoComplete='off'
                                 />
                             </Grid>
                         </Grid>
@@ -255,6 +258,7 @@ const PaymentForm = () => {
                             fullWidth
                             value={cvc}
                             onChange={handleCvcChange}
+                            autoComplete='off'
                         />
                     </Grid>
                     <Grid item xs={12}>
@@ -265,6 +269,7 @@ const PaymentForm = () => {
                             fullWidth
                             value={selectedCountry}
                             onChange={(e) => setSelectedCountry(e.target.value)}
+                            autoComplete='off'
                         >
                             {countries.map((option) => (
                                 <MenuItem key={option.value} value={option.value}>

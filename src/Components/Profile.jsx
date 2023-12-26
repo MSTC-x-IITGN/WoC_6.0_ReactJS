@@ -18,6 +18,7 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import {
     Grid,
@@ -64,6 +65,7 @@ function Profile() {
         setSelectedDate(formattedDate);
     };
 
+    const [loading, setloading] = useState(false);
     const [updated, setUpdated] = useState(false);
     const [DocId, setDocId] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -131,7 +133,7 @@ function Profile() {
 
     const UpdateProfile = async () => {
         if (isValid && isValid2 && isValid3 && isValid4) {
-
+            setloading(true);
             const docRef = doc(db, 'User', DocId);
             await updateDoc(docRef, {
                 FirstName: name2,
@@ -146,12 +148,13 @@ function Profile() {
                 DOB: selectedDate,
             })
                 .then(() => {
-                    console.log('updated..', DocId);
+                    // console.log('updated..', DocId);
                 })
                 .catch((error) => {
-                    console.error('Error updating document: ', error);
+                    // console.error('Error updating document: ', error);
                 });
             setUpdated(!updated);
+            setloading(false);
         }
     };
 
@@ -164,7 +167,7 @@ function Profile() {
             });
 
             if (books.length > 0) {
-                console.log('books', books[0]);
+                // console.log('books', books[0]);
                 setName2(books[0].FirstName);
                 setName3(books[0].MiddleName);
                 setName4(books[0].LastName);
@@ -246,6 +249,7 @@ function Profile() {
                                                     value={name2}
                                                     onChange={handleNameChange2}
                                                     fullWidth
+                                                    autoComplete='off'
                                                 /> :
                                                 <TextField
                                                     error
@@ -256,6 +260,7 @@ function Profile() {
                                                     helperText="Please enter a valid name containing only letters."
                                                     onChange={handleNameChange2}
                                                     fullWidth
+                                                    autoComplete='off'
                                                 />
                                             }
                                         </Grid>
@@ -268,6 +273,8 @@ function Profile() {
                                                     value={name3}
                                                     onChange={handleNameChange3}
                                                     fullWidth
+                                                    autoComplete='off'
+
                                                 /> :
                                                 <TextField
                                                     error
@@ -278,6 +285,8 @@ function Profile() {
                                                     helperText="Please enter a valid name containing only letters."
                                                     onChange={handleNameChange3}
                                                     fullWidth
+                                                    autoComplete='off'
+
                                                 />
                                             }
                                         </Grid>
@@ -290,6 +299,8 @@ function Profile() {
                                                     value={name4}
                                                     onChange={handleNameChange4}
                                                     fullWidth
+                                                    autoComplete='off'
+
                                                 /> :
                                                 <TextField
                                                     error
@@ -300,6 +311,8 @@ function Profile() {
                                                     helperText="Please enter a valid name containing only letters."
                                                     onChange={handleNameChange4}
                                                     fullWidth
+                                                    autoComplete='off'
+
                                                 />
                                             }
                                         </Grid>
@@ -311,6 +324,8 @@ function Profile() {
                                                 value={username}
                                                 onChange={handleNameChange8}
                                                 fullWidth
+                                                autoComplete='off'
+
                                             />
                                         </Grid>
                                         <Grid item xs={10}>
@@ -323,6 +338,8 @@ function Profile() {
                                                     readOnly: true,
                                                 }}
                                                 fullWidth
+                                                autoComplete='off'
+
                                             />
                                         </Grid>
                                         <Grid item xs={10} style={{ marginTop: '0.4em' }}>
@@ -338,6 +355,7 @@ function Profile() {
                                                     value={gender}
                                                     onChange={handleGenderChange}
                                                     style={{ flexDirection: 'row' }}
+                                                    
                                                 >
                                                     <FormControlLabel style={{ marginLeft: "1em" }} value="male" control={<Radio />} label="Male" />
                                                     <FormControlLabel style={{ marginLeft: "1em" }} value="female" control={<Radio />} label="Female" />
@@ -368,6 +386,7 @@ function Profile() {
                                                     value={phoneNumber}
                                                     onChange={handleInputChange}
                                                     fullWidth
+                                                    autoComplete='off'
                                                 /> :
                                                 <TextField
                                                     error
@@ -378,6 +397,7 @@ function Profile() {
                                                     helperText="Please enter a 10-digit number."
                                                     onChange={handleInputChange}
                                                     fullWidth
+                                                    autoComplete='off'
                                                 />
                                             }
                                         </Grid>
@@ -401,7 +421,9 @@ function Profile() {
                                         </Grid>
                                     </Grid>
                                     <div style={{ textAlign: 'center', marginTop: '1em' }}>
-                                        <Button variant="contained" color="success" onClick={UpdateProfile} style={{ marginTop: '1em', backgroundColor: '#2A386B' }} sx={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}>UPDATE</Button>
+                                        <Button variant="contained" color="success" onClick={UpdateProfile} style={{ marginTop: '1em', backgroundColor: '#2A386B' }} sx={{ fontFamily: 'Quicksand', fontWeight: 'bold' }}>
+                                            {!loading ? 'UPDATE' : "Updating..."}
+                                        </Button>
                                     </div>
                                 </CardContent>
                             </Card>

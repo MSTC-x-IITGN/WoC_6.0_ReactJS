@@ -61,6 +61,7 @@ export const FirebaseProvider = (props) => {
     const [user, setUser] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [UserID, setUserID] = useState('');
+    const [RegisteringPR, setRegisteringPR] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(firebaseAuth, (user) => {
@@ -73,7 +74,7 @@ export const FirebaseProvider = (props) => {
 
     const signupWithEmailAndPassword = (email, password) => {
         createUserWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
-            console.log('user Register in:', cred.user.email);
+            // console.log('user Register in:', cred.user.email);
             setIsLoggedIn(true);
             window.localStorage.setItem("ISLoggedIN", true);
             window.localStorage.setItem("LocalEmail", email);
@@ -89,25 +90,27 @@ export const FirebaseProvider = (props) => {
                 MiddleName: "Guest",
                 State: "Gujarat",
                 UseName: "Guest",
-                isMale: true
+                isMale: "male"
             }
             addDoc(colRef,
                 myData
             )
                 .then(() => {
-                    console.log('added');
+                    // console.log('added');
+                    setRegisteringPR(false);
                 })
 
         })
             .catch((err) => {
-                console.log(err.message);
+                // console.log(err.message);
                 setIsLoggedIn(false);
+                setRegisteringPR(true);
             });
     }
 
     const signinUserWithPassword = async (email, password) => {
         await signInWithEmailAndPassword(firebaseAuth, email, password).then((cred) => {
-            console.log('user logged in:', cred.user.email);
+            // console.log('user logged in:', cred.user.email);
             setIsLoggedIn(true);
             window.localStorage.setItem("ISLoggedIN", true);
             window.localStorage.setItem("LocalEmail", email);
@@ -115,7 +118,7 @@ export const FirebaseProvider = (props) => {
 
         })
             .catch((err) => {
-                console.log(err.message);
+                // console.log(err.message);
                 setIsLoggedIn(false);
             });
     }
@@ -123,17 +126,17 @@ export const FirebaseProvider = (props) => {
 
     const signinWithGoogle = () => {
         signInWithPopup(firebaseAuth, googleProvider).then((cred) => {
-            console.log('user logged in:', cred.user);
+            // console.log('user logged in:', cred.user);
             setIsLoggedIn(true);
         })
             .catch((err) => {
-                console.log(err.message);
+                // console.log(err.message);
                 setIsLoggedIn(false);
             });
     };
 
     useEffect(() => {
-        console.log('isLoggedIn', isLoggedIn);
+        // console.log('isLoggedIn', isLoggedIn);
         if (loggedIN == null) {
             setIsLoggedIn(false);
         }
@@ -141,9 +144,9 @@ export const FirebaseProvider = (props) => {
             signinUserWithPassword(localEmail, localPassword);
             setIsLoggedIn(true);
         }
-        console.log('kjhgfdxz', loggedIN);
-        console.log('1', localEmail);
-        console.log('2', localPassword);
+        // console.log('kjhgfdxz', loggedIN);
+        // console.log('1', localEmail);
+        // console.log('2', localPassword);
         // if (!isLoggedIn) {
         // navigate("/login");
         // }
@@ -159,7 +162,8 @@ export const FirebaseProvider = (props) => {
                 setIsLoggedIn,
                 isLoggedIn,
                 UserID,
-                setUserID
+                setUserID,
+                RegisteringPR
             }}>
             {props.children}
         </FirebaseContext.Provider>

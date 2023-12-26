@@ -17,7 +17,7 @@ function NavBar() {
         backgroundColor: '#20247B',
         margin: 0,
     };
-    console.log('inNav : ', firebase.isLoggedIn);
+    // console.log('inNav : ', firebase.isLoggedIn);
 
     return (
         <nav className=" navbar navbar-expand-lg p-2" style={navbarStyle}>

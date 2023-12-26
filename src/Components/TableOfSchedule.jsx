@@ -14,7 +14,7 @@ import { useState } from 'react';
 export default function AccessibleTable(props) {
     const rows = props.data;
 
-    console.log('rows', rows);
+    // console.log('rows', rows);
     return (
         <TableContainer component={Paper}>
             <Table aria-label="caption table">

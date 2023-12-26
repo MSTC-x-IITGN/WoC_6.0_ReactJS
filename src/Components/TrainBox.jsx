@@ -50,7 +50,8 @@ import '../CSS/TrainBox.css';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -67,7 +68,7 @@ function TrainBox(props) {
     const navigate = useNavigate();
     const { FromText = '', ToText = '', DateText = '', TrainID = '' } = props.data || {};
     const row = props.data.row;
-    console.log('row', row);
+    // console.log('row', row);
     const capitalize = (str) => {
         str = str.toLowerCase();
         return str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
@@ -124,9 +125,10 @@ function TrainBox(props) {
     };
 
     const navigateToPayment = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         addToBookList();
-        window.localStorage.setItem("PayID", e.TrainID);
+        // console.log('you are here !! ', e);
+        window.localStorage.setItem("PayID", TrainID);
         window.localStorage.setItem("TrainID", e.TrainNumber);
         navigate("/payment");
     }
@@ -142,12 +144,12 @@ function TrainBox(props) {
             snapshot.forEach((doc) => {
                 upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            console.log('UPPERbooks2::::', upperbooks);
+            // console.log('UPPERbooks2::::', upperbooks);
 
             let myListOfBook;
             upperbooks.forEach((element) => {
                 if (element.id == TrainID) {
-                    console.log('element.Trains : ', element);
+                    // console.log('element.Trains : ', element);
 
                     element.Trains.forEach((ele) => {
                         if (ele.TrainNumber === row.TrainNumber) {
@@ -158,21 +160,21 @@ function TrainBox(props) {
                 }
 
             })
-            console.log('myListOfBook...', myListOfBook);
+            // console.log('myListOfBook...', myListOfBook);
             const docRef = doc(db, path, TrainID);
             updateDoc(docRef, {
                 ...myListOfBook
             })
                 .then(() => {
-                    console.log('Booked..');
+                    // console.log('Booked..');
                 })
                 .catch((error) => {
-                    console.error('Error booked : ', error);
+                    // console.error('Error booked : ', error);
                 });
 
         })
             .catch((error) => {
-                console.error('Error viewing document: ', error);
+                // console.error('Error viewing document: ', error);
             });
     };
 
@@ -187,12 +189,12 @@ function TrainBox(props) {
             snapshot.forEach((doc) => {
                 upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            console.log('UPPERbooks2::::', upperbooks);
+            // console.log('UPPERbooks2::::', upperbooks);
 
             let myListOfBook;
             upperbooks.forEach((element) => {
                 if (element.id == TrainID) {
-                    console.log('element.Trains : ', element);
+                    // console.log('element.Trains : ', element);
 
                     element.Trains.forEach((ele) => {
                         if (ele.TrainNumber === row.TrainNumber) {
@@ -203,16 +205,16 @@ function TrainBox(props) {
                 }
 
             })
-            console.log('myListOfBook...', myListOfBook);
+            // console.log('myListOfBook...', myListOfBook);
             const docRef = doc(db, path, TrainID);
             updateDoc(docRef, {
                 ...myListOfBook
             })
                 .then(() => {
-                    console.log('Booked..');
+                    // console.log('Booked..');
                 })
                 .catch((error) => {
-                    console.error('Error booked : ', error);
+                    // console.error('Error booked : ', error);
                 });
 
         })
@@ -425,9 +427,16 @@ function TrainBox(props) {
                                     Add to BookList
                                 </Button>
                             )}
-                            <Button style={{ fontWeight: 'bold' }} onClick={navigateToPayment} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
-                                Book
-                            </Button>
+                            {!row.SearchIsPaid ?
+
+                                <Button style={{ fontWeight: 'bold' }} onClick={() => navigateToPayment(row)} variant="outlined" endIcon={<DirectionsSubwayIcon />}>
+                                    Book
+                                </Button>
+                                :
+                                <Button style={{ fontWeight: 'bold' }} onClick={() => navigate("/booklist")} variant="outlined" endIcon={<CheckCircleOutlineIcon />}>
+                                    Booked
+                                </Button>
+                            }
                             {/* <Snackbar open={openAdded} autoHideDuration={4000} onClose={handleCloseAdded}>
                                 <Alert onClose={handleCloseAdded} severity="success" color='success' sx={{ width: '100%' }}>
                                     Added Successfully !!

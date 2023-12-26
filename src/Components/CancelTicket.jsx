@@ -48,12 +48,12 @@ export default function CancelTicket() {
             snapshot.forEach((doc) => {
                 upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            console.log('UPPERbooks2::::', upperbooks);
+            // console.log('UPPERbooks2::::', upperbooks);
 
             let myListOfBook;
             upperbooks.forEach((element) => {
                 if (element.id == searchID) {
-                    console.log('element.Trains : ', element);
+                    // console.log('element.Trains : ', element);
                     element.Trains.forEach((ele) => {
                         if (ele.TrainNumber === trainID) {
                             ele.SearchIsPaid = false;
@@ -62,16 +62,16 @@ export default function CancelTicket() {
                     myListOfBook = element;
                 }
             })
-            console.log('myListOfBook...', myListOfBook);
+            // console.log('myListOfBook...', myListOfBook);
             const docRef = doc(db, path, searchID);
             updateDoc(docRef, {
                 ...myListOfBook
             })
                 .then(() => {
-                    console.log('Booked..');
+                    // console.log('Booked..');
                 })
                 .catch((error) => {
-                    console.error('Error booked : ', error);
+                    // console.error('Error booked : ', error);
                 });
         })
         navigate("/booklist");
@@ -129,10 +129,28 @@ export default function CancelTicket() {
                 <Typography style={{ margin: 'auto', marginTop: "4%", marginBottom: "4%", width: '90%', fontWeight: 'bold' }} variant="h4">
                     Policies
                 </Typography>
-                <Box data-aos="fade-up" sx={{ display: 'flex', flexGrow: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <Grid container spacing={2} sx={{ flex: 1, alignItems: 'center' }} style={{ margin: '4em', marginTop: 0, padding: '2em', border: '1px solid black', width: 'auto', borderRadius: '2em', backgroundColor: 'rgb(255, 254, 232)' }}>
+                <Box
+                    data-aos="fade-up"
+                    sx={{
+                        display: 'flex',
+                        flexGrow: 1,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'rgb(250,250,250)'
+                    }}
+                >
+                    <Grid
+                        container
+                        spacing={2}
+                        sx={{
+                            flex: 1,
+                            alignItems: 'center',
+                            maxWidth: '800px',
+                            margin: '0 auto',
+                        }}
+                    >
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     1. Cancellation Fee:
                                 </Grid>
@@ -142,7 +160,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     2. Time Constraints:
                                 </Grid>
@@ -152,7 +170,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     3. Refund Policy:
                                 </Grid>
@@ -162,7 +180,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     4. Cancellation Channels:
                                 </Grid>
@@ -172,7 +190,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     5. Documentation:
                                 </Grid>
@@ -182,7 +200,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     6. Partial Cancellations:
                                 </Grid>
@@ -192,7 +210,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     7. Seasonal Variations:
                                 </Grid>
@@ -202,7 +220,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     8. Force Majeure:
                                 </Grid>
@@ -212,7 +230,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     9. Voucher or Credit Options:
                                 </Grid>
@@ -222,7 +240,7 @@ export default function CancelTicket() {
                             </Grid>
                         </Grid>
                         <Grid item xs={12}>
-                            <Grid container spacing={2}>
+                            <Grid container spacing={2} style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Grid item xs={3}>
                                     10. Communication:
                                 </Grid>

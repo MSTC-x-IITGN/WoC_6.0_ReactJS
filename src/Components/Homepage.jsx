@@ -34,7 +34,7 @@ function Homepage() {
     });
 
     // eslint-disable-next-line
-    const imageURL1 = "https://i.pinimg.com/originals/4b/a7/2c/4ba72cbf2a6495c267d3707d1e3fac00.jpg";
+    // const imageURL1 = "https://i.pinimg.com/originals/4b/a7/2c/4ba72cbf2a6495c267d3707d1e3fac00.jpg";
     return (
         <>
             <div className='my-hompage'>

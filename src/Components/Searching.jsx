@@ -35,9 +35,9 @@ export default function Searching() {
     const db = getFirestore();
 
     const printall = () => {
-        console.log(SearchTrain.FromTextContext);
-        console.log(SearchTrain.ToTextContext);
-        console.log(SearchTrain.DateSelectedContext);
+        // console.log(SearchTrain.FromTextContext);
+        // console.log(SearchTrain.ToTextContext);
+        // console.log(SearchTrain.DateSelectedContext);
 
         const setPath = 'User/' + firebase.UserID + '/SearchList';
         const setColRef = collection(db, setPath);
@@ -51,7 +51,7 @@ export default function Searching() {
             snapshot.forEach((doc) => {
                 Upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            console.log('books::::', Upperbooks);
+            // console.log('books::::', Upperbooks);
             if (Upperbooks.length === 0) {
                 addDoc(setColRef, {
                     SearchFromText: SearchTrain.FromTextContext,
@@ -61,20 +61,20 @@ export default function Searching() {
                     SearchAllClasses: SearchTrain.AllClassesContext,
                     Trains: trains
                 }).then(() => {
-                    console.log('added searchList');
+                    // console.log('added searchList');
                     onSnapshot(combinedQuery, (snapshot) => {
                         let books = [];
                         snapshot.forEach((doc) => {
                             books.push({ ...doc.data(), id: doc.id });
                         });
                         setTrainbookingList(books[0].Trains);
-                        console.log('books1234::::', books[0]);
+                        // console.log('books1234::::', books[0]);
                     })
                 });
             } else {
                 setTrainID(Upperbooks[0].id);
                 setTrainbookingList(Upperbooks[0].Trains);
-                console.log('books1234::::', Upperbooks[0]);
+                // console.log('books1234::::', Upperbooks[0]);
             }
         })
 

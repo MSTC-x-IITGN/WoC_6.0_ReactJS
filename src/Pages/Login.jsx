@@ -27,6 +27,8 @@ import '../CSS/Login.css';
 const defaultTheme = createTheme();
 
 export default function LoginPage() {
+
+    const [loading, setloading] = useState(false);
     const [Emailcheck, setEmailcheck] = useState(false);
     const [passwordcheck, setpasswordcheck] = useState(false);
     const [justVerify, setJustVerify] = useState(false);
@@ -41,10 +43,12 @@ export default function LoginPage() {
         setpasswordcheck(true);
         e.preventDefault();
         if (password && email && validPassword) {
-            console.log('logged in...');
+            // console.log('logged in...');
+            setloading(true);
             const result = await firebase.signinUserWithPassword(email, password);
+            setloading(false);
             setJustVerify(true);
-            console.log('success', result);
+            // console.log('success', result);
         }
     };
 
@@ -70,7 +74,7 @@ export default function LoginPage() {
 
         <div className='my-glass-effect'>
             <BackgroundVideo />
-            
+
             <ThemeProvider theme={defaultTheme} >
                 <Container component="main" maxWidth="sm" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
                     <CssBaseline />
@@ -172,7 +176,7 @@ export default function LoginPage() {
                                 sx={{ mt: 3, mb: 2 }}
                                 style={{ fontFamily: 'Quicksand', fontWeight: 'bold', backgroundColor: '#25396F' }}
                             >
-                                Sign In
+                                {!loading ? 'Sign In' : 'Signing In....'}
                             </Button>
                             <Grid container>
                                 <Grid item xs={12}>

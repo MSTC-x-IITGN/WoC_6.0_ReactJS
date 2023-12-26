@@ -69,12 +69,12 @@ function Booklist() {
             snapshot.forEach((doc) => {
                 upperbooks.push({ ...doc.data(), id: doc.id });
             });
-            console.log('UPPERbooks2::::', upperbooks);
+            // console.log('UPPERbooks2::::', upperbooks);
 
             let myListOfBook;
             upperbooks.forEach((element) => {
                 if (element.id === e.SearchID) {
-                    console.log('element.Trains : ', element);
+                    // console.log('element.Trains : ', element);
 
                     element.Trains.forEach((ele) => {
                         if (ele.TrainNumber === e.TrainNumber) {
@@ -86,16 +86,16 @@ function Booklist() {
                     myListOfBook = element;
                 }
             });
-            console.log('myListOfBook...', myListOfBook);
+            // console.log('myListOfBook...', myListOfBook);
             const docRef = doc(db, path, e.SearchID);
             updateDoc(docRef, {
                 ...myListOfBook,
             })
                 .then(() => {
-                    console.log('Booked..');
+                    // console.log('Booked..');
                 })
                 .catch((error) => {
-                    console.error('Error booked : ', error);
+                    // console.error('Error booked : ', error);
                 });
         });
     };
@@ -113,7 +113,7 @@ function Booklist() {
     }
 
     useEffect(() => {
-        console.log('Fetching documents...');
+        // console.log('Fetching documents...');
         if (firebase.UserID != undefined && firebase.UserID) {
 
             const upperPath = 'User/' + firebase.UserID + '/SearchList';
@@ -123,7 +123,7 @@ function Booklist() {
                 snapshot.forEach((doc) => {
                     upperbooks.push({ ...doc.data(), id: doc.id });
                 });
-                console.log('UPPERbooks2::::', upperbooks);
+                // console.log('UPPERbooks2::::', upperbooks);
 
                 let upperBookedList = [];
                 upperbooks.forEach((element) => {
@@ -327,7 +327,7 @@ function Booklist() {
                                                                 <Button onClick={() => { removeFromBookList(row) }}
                                                                     variant="outlined"
                                                                     color='inherit'
-                                                                    style={{ display: !row.SearchIsPaid ? 'block' : 'none' }}
+                                                                    style={{ display: !row.SearchIsPaid ? 'block' : 'none', marginTop: '0.2em' }}
                                                                 >
                                                                     Remove Item <RemoveIcon />
                                                                 </Button>
